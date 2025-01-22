@@ -133,21 +133,24 @@ void Tracker::featureTracking(
 
   std::vector<uchar> status;
   std::vector<float> error;
-  auto time_lukas_kanade_tic = utils::Timer::tic();
-  cv::calcOpticalFlowPyrLK(ref_frame->img_,
-                           cur_frame->img_,
-                           px_ref,
-                           px_cur,
-                           status,
-                           error,
-                           klt_window_size,
-                           tracker_params_.klt_max_level_,
-                           kTerminationCriteria,
-                           cv::OPTFLOW_USE_INITIAL_FLOW);
-  VLOG(1) << "Optical Flow Timing [ms]: "
-          << utils::Timer::toc(time_lukas_kanade_tic).count();
-  VLOG(2) << "Finished Optical Flow Pyr LK tracking.";
-
+  if (px_ref.size() == 0u) {
+    LOG(ERROR) << "No keypoints in reference frame. Skipping optical flow tracking.";
+  } else {
+    auto time_lukas_kanade_tic = utils::Timer::tic();
+    cv::calcOpticalFlowPyrLK(ref_frame->img_,
+                            cur_frame->img_,
+                            px_ref,
+                            px_cur,
+                            status,
+                            error,
+                            klt_window_size,
+                            tracker_params_.klt_max_level_,
+                            kTerminationCriteria,
+                            cv::OPTFLOW_USE_INITIAL_FLOW);
+    VLOG(1) << "Optical Flow Timing [ms]: "
+            << utils::Timer::toc(time_lukas_kanade_tic).count();
+    VLOG(2) << "Finished Optical Flow Pyr LK tracking.";
+  }
   // TODO(Toni): use the error to further take only the best tracks?
 
   // At this point cur_frame should have no keypoints...

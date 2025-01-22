@@ -174,9 +174,11 @@ void CameraParams::parseImgSize(const YamlParser& yaml_parser,
 void CameraParams::parseFrameRate(const YamlParser& yaml_parser,
                                   double* frame_rate) {
   CHECK_NOTNULL(frame_rate);
-  int rate = 0;
+  // int rate = 0;
+  double rate = 0;
   yaml_parser.getYamlParam("rate_hz", &rate);
-  CHECK_GT(rate, 0u);
+  // CHECK_GT(rate, 0u);
+  CHECK_GT(rate, 0.0);
   *frame_rate = 1 / static_cast<double>(rate);
 }
 

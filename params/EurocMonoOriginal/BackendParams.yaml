@@ -7,11 +7,11 @@ backend_modality: 0
 autoInitialize: 0
 roundOnAutoInitialize: 0
 initialPositionSigma: 1e-05
-initialRollPitchSigma: 0.00174533 # 0.1/180.0*M_PI
+initialRollPitchSigma: 0.174533 # 10.0/180.0*M_PI
 initialYawSigma: 0.00174533 # 0.1/180.0*M_PI
-initialVelocitySigma: 0.0001
-initialAccBiasSigma: 0.01 # 0.1
-initialGyroBiasSigma: 0.001 # 0.01
+initialVelocitySigma: 0.001
+initialAccBiasSigma: 0.1
+initialGyroBiasSigma: 0.01
 
 # VISION PARAMETERS ###########################################################
 ## Smart Factors ##
@@ -30,7 +30,7 @@ rankTolerance: 1
 #   * if the landmark is triangulated at distance larger than this,
 #   * result is flagged as degenerate.
 #   */
-landmarkDistanceThreshold: 50
+landmarkDistanceThreshold: 10
 
 # DynamicOutlierRejection:
 #  /**
@@ -45,7 +45,7 @@ retriangulationThreshold: 0.001
 ## Noise models ##
 smartNoiseSigma: 3.0
 monoNoiseSigma: 1.8
-monoNormType: 2 # NomrType -> 0: L2 norm, 1: Huber, 2: Tukey
+monoNormType: 2
 monoNormParam: 4.6851
 stereoNoiseSigma: 1.8
 stereoNormType: 2
@@ -67,7 +67,7 @@ no_motion_position_precision: 1000
 no_motion_rotation_precision: 10000
 constant_vel_precision: 100
 numOptimize: 1
-nr_states: 200 # 25 # number of nodes in horizon.
+nr_states: 25 # number of nodes in horizon.
 # ISAM2GaussNewtonParams: continue updating the linear delta only when
 # changes are above this threshold (default: 0.001)
 wildfire_threshold: 0.001

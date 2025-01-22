@@ -175,10 +175,11 @@ LoopClosureDetector::LoopClosureDetector(
                                   lcd_params_.odom_rot_threshold_,
                                   lcd_params_.pcm_trans_threshold_,
                                   lcd_params_.pcm_rot_threshold_,
-                                  KimeraRPGO::Verbosity::QUIET);
+                                  KimeraRPGO::Verbosity::VERBOSE);
   if (lcd_params_.gnc_alpha_ > 0 && lcd_params_.gnc_alpha_ < 1) {
     pgo_params.setGncInlierCostThresholdsAtProbability(lcd_params_.gnc_alpha_);
   }
+  pgo_params.logOutput("../output_logs"); // Eric Elias
   pgo_ = std::make_unique<KimeraRPGO::RobustSolver>(pgo_params);
 
   if (log_output) {

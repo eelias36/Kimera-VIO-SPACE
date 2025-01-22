@@ -4,16 +4,22 @@
 
 # Specify path of the EuRoC dataset.
 # The path can be absolute, or relative to this file location.
-DATASET_PATH="/path/to/euroc/dataset"
+# DATASET_PATH="/data/Euroc/V2_01_easy/"
+# DATASET_PATH="/data/spacecraft/visible_close_2x"
+# DATASET_PATH="/data/spacecraft/visible_close_shadow"
+# DATASET_PATH="/data/spacecraft/visible_90min_withEclipse"
+# DATASET_PATH="/data/spacecraft/visible_90min_2x"
+DATASET_PATH="/data/spacecraft/visible_90min_withEclipse_2x"
+
 
 # Specify: 0 to run on EuRoC data, 1 to run on Kitti (not supported)
 DATASET_TYPE=0
 
 # Specify: 1 to enable the LoopClosureDetector, 0 to not.
-USE_LCD=0
+USE_LCD=1
 
 # Specify: 1 to enable logging of output files, 0 to not.
-LOG_OUTPUT=0
+LOG_OUTPUT=1
 ###################################################################
 
 ###################################################################
@@ -24,8 +30,10 @@ LOG_OUTPUT=0
 BUILD_PATH="../build"
 
 # Params path: specify where the parameters for Kimera are.
-PARAMS_PATH="../params/Euroc"
+# PARAMS_PATH="../params/Euroc"
+# PARAMS_PATH="../params/EurocMonoOriginal"
 # PARAMS_PATH="../params/EurocMono"  # use this for monocular-mode (left cam only)
+PARAMS_PATH="../params/90mins"
 
 # Vocabulary path: specify where the vocabulary for loop closure is.
 VOCABULARY_PATH="../vocabulary"
@@ -88,7 +96,7 @@ echo """ Launching:
 $BUILD_PATH/stereoVIOEuroc \
   --dataset_type="$DATASET_TYPE" \
   --dataset_path="$DATASET_PATH" \
-  --initial_k=50 \
+  --initial_k=1 \
   --final_k=10000 \
   --params_folder_path="$PARAMS_PATH" \
   --use_lcd="$USE_LCD" \
@@ -101,7 +109,7 @@ $BUILD_PATH/stereoVIOEuroc \
   --logtostderr=1 \
   --colorlogtostderr=1 \
   --log_prefix=1 \
-  --v=0 \
+  --v=10 \
   --vmodule=Pipeline*=00 \
   --log_output="$LOG_OUTPUT" \
   --log_euroc_gt_data="$LOG_OUTPUT" \

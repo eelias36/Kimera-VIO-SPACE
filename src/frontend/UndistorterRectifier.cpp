@@ -37,6 +37,10 @@ void UndistorterRectifier::UndistortRectifyKeypoints(
     std::optional<cv::Mat> R,
     std::optional<cv::Mat> P) {
   CHECK_NOTNULL(undistorted_keypoints)->clear();
+  if (keypoints.empty()) {
+    LOG(ERROR) << "UndistortRectifyKeypoints: keypoints are empty.";
+    return;
+  }
   switch (cam_param.distortion_model_) {
     case DistortionModel::RADTAN: {
       cv::undistortPoints(keypoints,

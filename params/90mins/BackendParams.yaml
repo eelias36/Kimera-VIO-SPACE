@@ -10,8 +10,8 @@ initialPositionSigma: 1.e-0 # 1e-05
 initialRollPitchSigma: 0.0174533 # 0.00174533 # 0.1/180.0*M_PI
 initialYawSigma: 0.0174533 # 0.00174533 # 0.1/180.0*M_PI
 initialVelocitySigma: 0.01
-initialAccBiasSigma: 0.1 #0.01 # 0.1
-initialGyroBiasSigma: 0.01 #0.001 # 0.01
+initialAccBiasSigma: 0.001 #0.01 # 0.1
+initialGyroBiasSigma: 0.0001 #0.001 # 0.01
 
 # VISION PARAMETERS ###########################################################
 ## Smart Factors ##
@@ -40,7 +40,7 @@ landmarkDistanceThreshold: 50
 #   */
 outlierRejection: 1 # 3
 # ///< threshold to decide whether to re-triangulate
-retriangulationThreshold: 0.2 #0.001
+retriangulationThreshold: 0.1 #0.001
 
 ## Noise models ##
 smartNoiseSigma: 3.0 # 3.0

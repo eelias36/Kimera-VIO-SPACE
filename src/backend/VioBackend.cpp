@@ -1142,6 +1142,10 @@ bool VioBackend::optimize(
                       VLOG_IS_ON(10));
   }
 
+  gtsam::NonlinearFactorGraph nfg(smoother_->getFactors());
+  std::ofstream os("nfg_before_opt.dot");
+  nfg.saveGraph(os);
+
   // Recreate the graph before marginalization.
   if (VLOG_IS_ON(10) && FLAGS_debug_graph_before_opt) {
     debug_info_.graphBeforeOpt = smoother_->getFactors();

@@ -75,7 +75,7 @@ EurocPlayground::EurocPlayground(const std::string& dataset_path,
   stereo_camera_ = std::make_unique<StereoCamera>(
       vio_params_.camera_params_.at(0), vio_params_.camera_params_.at(1));
   stereo_matcher_ = std::make_unique<StereoMatcher>(
-      stereo_camera_, vio_params_.frontend_params_.stereo_matching_params_);
+      stereo_camera_, vio_params_.frontend_params_[0].stereo_matching_params_);
 }
 
 void EurocPlayground::visualizeGtData(const bool& viz_traj,

@@ -99,6 +99,9 @@ struct VioParams : public PipelineParams {
             const std::string& left_cam_params_filepath,
             const std::string& right_cam_params_filepath,
             const std::string& frontend_params_filepath,
+            const std::string& left_tir_cam_params_filepath,
+            const std::string& right_tir_cam_params_filepath,
+            const std::string& frontend_tir_params_filepath,
             const std::string& backend_params_filepath,
             const std::string& lcd_params_filepath,
             const std::string& display_params_filepath,
@@ -132,6 +135,9 @@ struct VioParams : public PipelineParams {
   static constexpr char kLeftCameraFilename[] = "LeftCameraParams.yaml";
   static constexpr char kRightCameraFilename[] = "RightCameraParams.yaml";
   static constexpr char kFrontendFilename[] = "FrontendParams.yaml";
+  static constexpr char kLeftTirCameraFilename[] = "LeftTirCameraParams.yaml";
+  static constexpr char kRightTirCameraFilename[] = "RightTirCameraParams.yaml";
+  static constexpr char kFrontendTirFilename[] = "FrontendTirParams.yaml";
   static constexpr char kBackendFilename[] = "BackendParams.yaml";
   static constexpr char kLcdFilename[] = "LcdParams.yaml";
   static constexpr char kDisplayFilename[] = "DisplayParams.yaml";
@@ -142,7 +148,7 @@ struct VioParams : public PipelineParams {
   ImuParams imu_params_;
   MultiCameraParams camera_params_;
   //! Pipeline Modules paramters
-  FrontendParams frontend_params_;
+  std::vector<FrontendParams> frontend_params_;
   //! Mind that this is shared btw the vio pipeline and dataprovider,
   //!  so that any changes to this pointer will affect both.
   BackendParams::Ptr backend_params_;
@@ -179,6 +185,9 @@ struct VioParams : public PipelineParams {
   std::string left_cam_params_filepath_;
   std::string right_cam_params_filepath_;
   std::string frontend_params_filepath_;
+  std::string left_tir_cam_params_filepath_;
+  std::string right_tir_cam_params_filepath_;
+  std::string frontend_tir_params_filepath_;
   std::string backend_params_filepath_;
   std::string lcd_params_filepath_;
   std::string display_params_filepath_;

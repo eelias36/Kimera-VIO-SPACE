@@ -41,6 +41,8 @@ bool DataProviderInterface::spin() {
   CHECK(imu_multi_callback_);
   CHECK(left_frame_callback_);
   CHECK(right_frame_callback_);
+  CHECK(left_tir_frame_callback_);
+  CHECK(right_tir_frame_callback_);
 
   // 2) Loop over the dataset and:
   //  a) Create data packets out of the data.
@@ -51,6 +53,10 @@ bool DataProviderInterface::spin() {
     left_frame_callback_(
         std::make_unique<Frame>(0, 0, CameraParams(), cv::Mat()));
     right_frame_callback_(
+        std::make_unique<Frame>(0, 0, CameraParams(), cv::Mat()));
+    left_tir_frame_callback_(
+        std::make_unique<Frame>(0, 0, CameraParams(), cv::Mat()));
+    right_tir_frame_callback_(
         std::make_unique<Frame>(0, 0, CameraParams(), cv::Mat()));
     //! Usually you would use only one of these
     imu_single_callback_(ImuMeasurement());

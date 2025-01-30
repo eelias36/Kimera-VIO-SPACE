@@ -82,6 +82,12 @@ class DataProviderInterface {
   inline void registerRightFrameCallback(const FrameInputCallback& callback) {
     right_frame_callback_ = callback;
   }
+  inline void registerLeftTirFrameCallback(const FrameInputCallback& callback) {
+    left_tir_frame_callback_ = callback;
+  }
+  inline void registerRightTirFrameCallback(const FrameInputCallback& callback) {
+    right_tir_frame_callback_ = callback;
+  }
   inline void registerDepthFrameCallback(
       const DepthFrameInputCallback& callback) {
     depth_frame_callback_ = callback;
@@ -98,6 +104,8 @@ class DataProviderInterface {
   ImuMultiInputCallback imu_multi_callback_;
   FrameInputCallback left_frame_callback_;
   FrameInputCallback right_frame_callback_;
+  FrameInputCallback left_tir_frame_callback_;
+  FrameInputCallback right_tir_frame_callback_;
   DepthFrameInputCallback depth_frame_callback_;
   ExternalOdomInputCallback external_odom_callback_;
 

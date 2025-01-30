@@ -135,13 +135,31 @@ class EurocDataProvider : public DataProviderInterface {
     return getImgName("cam0", k, img_name);
   }
   /**
-   * @brief getLeftImgName returns the img filename given the frame number
+   * @brief getRightImgName returns the img filename given the frame number
    * @param[in] k frame number
    * @param[out] img_name returned filename of the img
    * @return if k is larger than the number of frames, returns false, otw true.
    */
   inline bool getRightImgName(const size_t& k, std::string* img_name) const {
     return getImgName("cam1", k, img_name);
+  }
+    /**
+   * @brief getLeftTirImgName returns the img filename given the frame number
+   * @param[in] k frame number
+   * @param[out] img_name returned filename of the img
+   * @return if k is larger than the number of frames, returns false, otw true.
+   */
+  inline bool getLeftTirImgName(const size_t& k, std::string* img_name) const {
+    return getImgName("cam2", k, img_name);
+  }
+  /**
+   * @brief getRightTirImgName returns the img filename given the frame number
+   * @param[in] k frame number
+   * @param[out] img_name returned filename of the img
+   * @return if k is larger than the number of frames, returns false, otw true.
+   */
+  inline bool getRightTirImgName(const size_t& k, std::string* img_name) const {
+    return getImgName("cam3", k, img_name);
   }
 
   // Retrieve relative pose between timestamps.
@@ -228,6 +246,8 @@ class EurocDataProvider : public DataProviderInterface {
 
   const std::string kLeftCamName = "cam0";
   const std::string kRightCamName = "cam1";
+  const std::string kLeftTirCamName = "cam2";
+  const std::string kRightTirCamName = "cam3";
   const std::string kImuName = "imu0";
 
   //! Pre-stored imu-measurements

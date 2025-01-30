@@ -154,7 +154,7 @@ bool EurocDataProvider::spinOnce() {
   const CameraParams& left_cam_info = vio_params_.camera_params_.at(0);
   const CameraParams& right_cam_info = vio_params_.camera_params_.at(1);
   const bool& equalize_image =
-      vio_params_.frontend_params_.stereo_matching_params_.equalize_image_;
+      vio_params_.frontend_params_.at(0).stereo_matching_params_.equalize_image_;
 
   const Timestamp& timestamp_frame_k = timestampAtFrame(current_k_);
   VLOG(10) << "Sending left/right frames k= " << current_k_
@@ -830,7 +830,10 @@ bool MonoEurocDataProvider::spinOnce() {
 
   const CameraParams& left_cam_info = vio_params_.camera_params_.at(0);
   const bool& equalize_image =
-      vio_params_.frontend_params_.stereo_matching_params_.equalize_image_;
+      vio_params_.frontend_params_.at(0).stereo_matching_params_.equalize_image_;
+  const CameraParams& left_tir_cam_info = vio_params_.camera_params_.at(1);
+  const bool& equalize_tir_image =
+      vio_params_.frontend_params_.at(1).stereo_matching_params_.equalize_image_;
 
   const Timestamp& timestamp_frame_k = timestampAtFrame(current_k_);
   VLOG(10) << "Sending left frame k= " << current_k_
@@ -853,7 +856,23 @@ bool MonoEurocDataProvider::spinOnce() {
                                 UtilsOpenCV::ReadAndConvertToGrayScale(
                                     left_img_filename, equalize_image)));
   } else {
-    LOG(ERROR) << "Missing left image, proceeding to the next one.";
+    LOG(ERROR) << "Missing left VIS image, proceeding to the next one.";
+  }
+  std::string left_tir_img_filename;
+  bool available_left_tir_img = getLeftTirImgName(current_k_, &left_tir_img_filename);
+  if (available_left_tir_img) {
+    // Both stereo images are available, send data to VIO
+    CHECK(left_tir_frame_callback_);
+    left_tir_frame_callback_(
+        std::make_unique<Frame>(current_k_,
+                                timestamp_frame_k,
+                                // TODO(Toni): this info should be passed to
+                                // the camera... not all the time here...
+                                left_tir_cam_info,
+                                UtilsOpenCV::ReadAndConvertToGrayScale(
+                                    left_tir_img_filename, equalize_tir_image)));
+  } else {
+    LOG(ERROR) << "Missing left TIR image, proceeding to the next one.";
   }
 
   // This is done directly when parsing the Imu data.

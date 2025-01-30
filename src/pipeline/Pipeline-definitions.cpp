@@ -31,6 +31,11 @@ decltype(
 decltype(
     VioParams::kRightCameraFilename) constexpr VioParams::kRightCameraFilename;
 decltype(VioParams::kFrontendFilename) constexpr VioParams::kFrontendFilename;
+decltype(
+    VioParams::kLeftTirCameraFilename) constexpr VioParams::kLeftTirCameraFilename;
+decltype(
+    VioParams::kRightTirCameraFilename) constexpr VioParams::kRightTirCameraFilename;
+decltype(VioParams::kFrontendTirFilename) constexpr VioParams::kFrontendTirFilename;
 decltype(VioParams::kBackendFilename) constexpr VioParams::kBackendFilename;
 decltype(VioParams::kLcdFilename) constexpr VioParams::kLcdFilename;
 decltype(VioParams::kDisplayFilename) constexpr VioParams::kDisplayFilename;
@@ -42,6 +47,9 @@ VioParams::VioParams(const std::string& params_folder_path)
                 params_folder_path + '/' + kLeftCameraFilename,
                 params_folder_path + '/' + kRightCameraFilename,
                 params_folder_path + '/' + kFrontendFilename,
+                params_folder_path + '/' + kLeftTirCameraFilename,
+                params_folder_path + '/' + kRightTirCameraFilename,
+                params_folder_path + '/' + kFrontendTirFilename,
                 params_folder_path + '/' + kBackendFilename,
                 params_folder_path + '/' + kLcdFilename,
                 params_folder_path + '/' + kDisplayFilename,
@@ -57,6 +65,9 @@ VioParams::VioParams(const std::string& params_folder_path,
                 sensor_folder_path + '/' + kLeftCameraFilename,
                 sensor_folder_path + '/' + kRightCameraFilename,
                 params_folder_path + '/' + kFrontendFilename,
+                sensor_folder_path + '/' + kLeftTirCameraFilename,
+                sensor_folder_path + '/' + kRightTirCameraFilename,
+                params_folder_path + '/' + kFrontendTirFilename,
                 params_folder_path + '/' + kBackendFilename,
                 params_folder_path + '/' + kLcdFilename,
                 params_folder_path + '/' + kDisplayFilename,
@@ -71,6 +82,9 @@ VioParams::VioParams(const std::string& pipeline_params_filepath,
                      const std::string& left_cam_params_filepath,
                      const std::string& right_cam_params_filepath,
                      const std::string& frontend_params_filepath,
+                     const std::string& left_tir_cam_params_filepath,
+                     const std::string& right_tir_cam_params_filepath,
+                     const std::string& frontend_tir_params_filepath,
                      const std::string& backend_params_filepath,
                      const std::string& lcd_params_filepath,
                      const std::string& display_params_filepath,
@@ -93,6 +107,9 @@ VioParams::VioParams(const std::string& pipeline_params_filepath,
       left_cam_params_filepath_(left_cam_params_filepath),
       right_cam_params_filepath_(right_cam_params_filepath),
       frontend_params_filepath_(frontend_params_filepath),
+      left_tir_cam_params_filepath_(left_tir_cam_params_filepath),
+      right_tir_cam_params_filepath_(right_tir_cam_params_filepath),
+      frontend_tir_params_filepath_(frontend_tir_params_filepath),
       backend_params_filepath_(backend_params_filepath),
       lcd_params_filepath_(lcd_params_filepath),
       display_params_filepath_(display_params_filepath),
@@ -128,6 +145,10 @@ bool VioParams::parseYAML(const std::string&) {
   if (frontend_type_ == FrontendType::kStereoImu) {
     camera_params_.push_back(parseCameraParams(right_cam_params_filepath_));
   }
+  camera_params_.push_back(parseCameraParams(left_tir_cam_params_filepath_));
+  if (frontend_type_ == FrontendType::kStereoImu) {
+    camera_params_.push_back(parseCameraParams(right_tir_cam_params_filepath_));
+  }
 
   // Parse Backend params, needs a bit of help with backend_type
   switch (backend_type_) {
@@ -149,7 +170,12 @@ bool VioParams::parseYAML(const std::string&) {
   parsePipelineParams(backend_params_filepath_, backend_params_.get());
 
   // Parse Frontend params.
+  FrontendParams frontend_params;
   parsePipelineParams(frontend_params_filepath_, &frontend_params_);
+  FrontendParams frontend_tir_params;
+  parsePipelineParams(frontend_tir_params_filepath_, &frontend_tir_params);
+  frontend_params_.push_back(frontend_params);
+  frontend_params_.push_back(frontend_tir_params);
 
   // Parse LcdParams
   parsePipelineParams(lcd_params_filepath_, &lcd_params_);
@@ -188,7 +214,7 @@ void VioParams::print() const {
   LOG(INFO) << std::string(10, '*') << " VIO PARAMS " << std::string(10, '*');
   imu_params_.print();
   for (const auto& cam : camera_params_) cam.print();
-  frontend_params_.print();
+  for (const auto& frontend : frontend_params_) frontend.print();
   CHECK(backend_params_);
   backend_params_->print();
   lcd_params_.print();

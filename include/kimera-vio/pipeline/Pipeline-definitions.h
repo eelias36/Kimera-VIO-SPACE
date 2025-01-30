@@ -84,6 +84,9 @@ struct VioParams : public PipelineParams {
    * @param left_camera_params_filepath  Left Camera params YAML file path.
    * @param right_camera_params_filepath Right Camera params YAML file path.
    * @param frontend_params_filepath Frontend params YAML file path.
+   * @param left_tir_camera_params_filepath  Left TIR Camera params YAML file path.
+   * @param right_tir_camera_params_filepath Right TIR Camera params YAML file path.
+   * @param frontend_tir_params_filepath Frontend TIR params YAML file path.
    * @param backend_params_filepath Backend params YAML file path.
    * @param lcd_params_filepath Loop closure params YAML file path.
    * @param display_params_filepath Display params YAML file path.

@@ -27,7 +27,7 @@ MonoDataProviderModule::MonoDataProviderModule(OutputQueue* output_queue,
                          name_id,
                          parallel_run),
       left_frame_queue_("data_provider_left_frame_queue"),
-      left_tir_frame_queue_("data_provider_left_tir_frame_queue"),
+      tir_frame_queue_("data_provider_tir_frame_queue"),
       cached_left_frame_(nullptr) {}
 
 MonoDataProviderModule::InputUniquePtr
@@ -55,7 +55,7 @@ MonoDataProviderModule::getInputPacket() {
 
   if (!shutdown_) {
     CHECK(vio_pipeline_callback_);
-    vio_pipeline_callback_(std::make_unique<MonoImuSyncPacket>(
+    vio_pipeline_callback_(std::make_unique<StereoImuSyncPacket>(
         StereoFrame(left_frame_id,
                     timestamp,
                     *mono_imu_sync_packet->frame_,  // this copies...
@@ -168,6 +168,7 @@ Frame::UniquePtr MonoDataProviderModule::getLeftFramePayload() {
 
 void MonoDataProviderModule::shutdownQueues() {
   left_frame_queue_.shutdown();
+  tir_frame_queue_.shutdown();
   DataProviderModule::shutdownQueues();
 }
 

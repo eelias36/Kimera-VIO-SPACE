@@ -177,7 +177,7 @@ struct VioParams : public PipelineParams {
            display_type_ == rhs.display_type_ &&
            lcd_params_ == rhs.lcd_params_ &&
            display_params_ == rhs.display_params_ &&
-           parallel_run_ == rhs.parallel_run_;
+           parallel_run_ == rhs.parallel_run_ &&
            num_cameras_ == rhs.num_cameras_;
   }
 

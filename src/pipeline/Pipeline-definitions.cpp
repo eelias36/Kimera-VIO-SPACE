@@ -101,6 +101,7 @@ VioParams::VioParams(const std::string& pipeline_params_filepath,
       frontend_type_(FrontendType::kStereoImu),
       backend_type_(BackendType::kStructuralRegularities),
       parallel_run_(true),
+      num_cameras_(1),
       // Filepaths, keep defaults unless you changed file names.
       pipeline_params_filepath_(pipeline_params_filepath),
       imu_params_filepath_(imu_params_filepath),
@@ -136,6 +137,9 @@ bool VioParams::parseYAML(const std::string&) {
   yaml_parser.getYamlParam("display_type", &display_type);
   display_type_ = static_cast<DisplayType>(display_type);
   yaml_parser.getYamlParam("parallel_run", &parallel_run_);
+  int num_cameras;
+  yaml_parser.getYamlParam("num_cameras", &num_cameras);
+  num_cameras_ = static_cast<int>(num_cameras);
 
   // Parse IMU params
   parsePipelineParams(imu_params_filepath_, &imu_params_);
@@ -225,6 +229,7 @@ void VioParams::print() const {
   LOG(INFO) << "Display Type: " << VIO::to_underlying(display_type_);
   LOG(INFO) << "Running VIO in " << (parallel_run_ ? "parallel" : "sequential")
             << " mode.";
+  LOG(INFO) << "Number of cameras: " << num_cameras_;
 }
 
 //! Helper function to parse camera params.

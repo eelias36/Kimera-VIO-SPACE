@@ -106,6 +106,8 @@ int main(int argc, char* argv[]) {
   // the non-blocking versions with real sensor streams)
   dataset_parser->registerLeftFrameCallback(std::bind(
       &VIO::Pipeline::fillLeftFrameQueue, vio_pipeline, std::placeholders::_1));
+  dataset_parser->registerLeftTirFrameCallback(std::bind(
+      &VIO::Pipeline::fillLeftTirFrameQueue, vio_pipeline, std::placeholders::_1));
 
   if (vio_params.frontend_type_ == VIO::FrontendType::kStereoImu) {
     auto stereo_pipeline =

@@ -35,7 +35,7 @@ class MonoImuPipeline : public Pipeline {
   ~MonoImuPipeline() = default;
 
  protected:
-  Camera::ConstPtr camera_;
+  std::vector<Camera::ConstPtr> cameras_;
 };
 
 }  // namespace VIO

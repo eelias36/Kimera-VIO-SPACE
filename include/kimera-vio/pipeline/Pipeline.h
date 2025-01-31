@@ -74,6 +74,19 @@ class Pipeline {
         std::move(left_frame));
   }
 
+  inline void fillLeftTirFrameQueue(Frame::UniquePtr left_frame) {
+    CHECK(data_provider_module_);
+    CHECK(left_frame);
+    data_provider_module_->fillLeftTirFrameQueue(std::move(left_frame));
+  }
+
+  inline void fillLeftTirFrameQueueBlockingIfFull(Frame::UniquePtr left_frame) {
+    CHECK(data_provider_module_);
+    CHECK(left_frame);
+    data_provider_module_->fillLeftTirFrameQueueBlockingIfFull(
+        std::move(left_frame));
+  }
+
   inline void fillSingleImuQueue(const ImuMeasurement& imu_measurement) {
     CHECK(data_provider_module_);
     data_provider_module_->fillImuQueue(imu_measurement);

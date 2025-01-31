@@ -160,6 +160,7 @@ struct VioParams : public PipelineParams {
   DisplayType display_type_;
   std::optional<OdometryParams> odom_params_;
   bool parallel_run_;
+  int num_cameras_;
 
  protected:
   //! Helper function to parse camera params.
@@ -177,6 +178,7 @@ struct VioParams : public PipelineParams {
            lcd_params_ == rhs.lcd_params_ &&
            display_params_ == rhs.display_params_ &&
            parallel_run_ == rhs.parallel_run_;
+           num_cameras_ == rhs.num_cameras_;
   }
 
   //! Names of the YAML files with the parameters.

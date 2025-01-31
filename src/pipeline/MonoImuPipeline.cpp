@@ -39,10 +39,15 @@ MonoImuPipeline::MonoImuPipeline(const VioParams& params,
                                  Visualizer3D::UniquePtr&& visualizer,
                                  DisplayBase::UniquePtr&& displayer,
                                  PreloadedVocab::Ptr&& preloaded_vocab)
-    : Pipeline(params), camera_(nullptr) {
+    : Pipeline(params), cameras_(nullptr) {
   // CHECK_EQ(params.camera_params_.size(), 1u) << "Need one camera for
   // MonoImuPipeline.";
-  camera_ = std::make_shared<Camera>(params.camera_params_.at(0));
+
+    CHECK_EQ(params.camera_params_.size(), params.num_cameras_)
+        << "Number of camera parameters not equal to number of parameters.";
+    for (const auto& camera_params : params.camera_params_) {
+        cameras_.push_back(std::make_shared<Camera>(camera_params));
+    }
 
   data_provider_module_ = std::make_unique<MonoDataProviderModule>(
       &frontend_input_queue_, "Mono Data Provider", parallel_run_);
@@ -76,7 +81,7 @@ MonoImuPipeline::MonoImuPipeline(const VioParams& params,
           params.imu_params_,
           gtsam::imuBias::ConstantBias(),
           params.frontend_params_,
-          camera_,
+          cameras_.at(0),
           FLAGS_visualize ? &display_input_queue_ : nullptr,
           FLAGS_log_output,
           params.odom_params_));
@@ -118,7 +123,7 @@ MonoImuPipeline::MonoImuPipeline(const VioParams& params,
   // TODO(marcus): get rid of fake stereocam
   LOG_IF(FATAL, params.backend_params_->addBetweenStereoFactors_)
       << "addBetweenStereoFactors is set to true, but this is a mono pipeline!";
-  const auto& calib = camera_->getCalibration();
+  const auto& calib = cameras_.at(0)->getCalibration();
   // TODO(marcus): hardcoded baseline!
   StereoCalibPtr stereo_calib(new gtsam::Cal3_S2Stereo(
       calib.fx(), calib.fy(), calib.skew(), calib.px(), calib.py(), 0.1));
@@ -129,7 +134,7 @@ MonoImuPipeline::MonoImuPipeline(const VioParams& params,
       BackendFactory::createBackend(
           static_cast<BackendType>(params.backend_type_),
           // These two should be given by parameters.
-          camera_->getBodyPoseCam(),
+          cameras_.at(0)->getBodyPoseCam(),
           stereo_calib,
           *backend_params_,
           imu_params_,
@@ -178,8 +183,8 @@ MonoImuPipeline::MonoImuPipeline(const VioParams& params,
         parallel_run_,
         LcdFactory::createLcd(LoopClosureDetectorType::BoW,
                               params.lcd_params_,
-                              camera_->getCamParams(),
-                              camera_->getBodyPoseCam(),
+                              cameras_.at(0)->getCamParams(),
+                              cameras_.at(0)->getBodyPoseCam(),
                               std::nullopt,
                               std::nullopt,
                               std::nullopt,

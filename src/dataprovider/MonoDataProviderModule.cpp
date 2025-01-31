@@ -27,18 +27,43 @@ MonoDataProviderModule::MonoDataProviderModule(OutputQueue* output_queue,
                          name_id,
                          parallel_run),
       left_frame_queue_("data_provider_left_frame_queue"),
+      left_tir_frame_queue_("data_provider_left_tir_frame_queue"),
       cached_left_frame_(nullptr) {}
 
 MonoDataProviderModule::InputUniquePtr
 MonoDataProviderModule::getInputPacket() {
-  if (!MISO::shutdown_) {
-    MonoImuSyncPacket::UniquePtr mono_imu_sync_packet = getMonoImuSyncPacket();
-    if (!mono_imu_sync_packet) return nullptr;
+  //! Get VIS image + IMU data
+  MonoImuSyncPacket::UniquePtr mono_imu_sync_packet = getMonoImuSyncPacket(false);
+  if (!mono_imu_sync_packet) return nullptr;
 
-    CHECK(vio_pipeline_callback_);
-    vio_pipeline_callback_(std::move(mono_imu_sync_packet));
-  } else {
+  const Timestamp& timestamp = mono_imu_sync_packet->timestamp_;
+  const FrameId& left_frame_id = mono_imu_sync_packet->frame_->id_;
+
+  //! Get TIR image data
+  // This search might not be successful if the data_provider did not push
+  // to the TIR queue (perhaps fast enough).
+  Frame::UniquePtr tir_frame_payload = nullptr;
+  if (!MISO::syncQueue(timestamp, &tir_frame_queue_, &tir_frame_payload)) {
+    // Dropping this message because of missing VIS/TIR synced
+    // frames.
+    LOG(ERROR) << "Missing TIR frame for VIS frame with id " << left_frame_id
+                << ", dropping this frame.";
     return nullptr;
+  }
+  CHECK(tir_frame_payload);
+  timestamp_last_frame_ = timestamp;
+
+  if (!shutdown_) {
+    CHECK(vio_pipeline_callback_);
+    vio_pipeline_callback_(std::make_unique<MonoImuSyncPacket>(
+        StereoFrame(left_frame_id,
+                    timestamp,
+                    *mono_imu_sync_packet->frame_,  // this copies...
+                    *tir_frame_payload),          // this copies...
+        // be given in PipelineParams.
+        mono_imu_sync_packet->imu_stamps_,
+        mono_imu_sync_packet->imu_accgyrs_,
+        mono_imu_sync_packet->world_NavState_ext_odom_));
   }
   return nullptr;
 }

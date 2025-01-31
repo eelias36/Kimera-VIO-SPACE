@@ -25,6 +25,8 @@ enum class FrontendType {
   kRgbdImu = 2,
   //! Placeholder for parsing
   kUnknown = 3,
+  //! Frontend that works with 2 Mono cameras and Imu
+  k2MonoImu = 4,
 };
 
 }  // namespace VIO

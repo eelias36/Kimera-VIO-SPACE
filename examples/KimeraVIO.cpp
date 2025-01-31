@@ -26,6 +26,7 @@
 #include "kimera-vio/frontend/StereoImuSyncPacket.h"
 #include "kimera-vio/logging/Logger.h"
 #include "kimera-vio/pipeline/MonoImuPipeline.h"
+#include "kimera-vio/pipeline/Mono2ImuPipeline.h"
 #include "kimera-vio/pipeline/Pipeline.h"
 #include "kimera-vio/pipeline/StereoImuPipeline.h"
 #include "kimera-vio/utils/Statistics.h"
@@ -87,10 +88,13 @@ int main(int argc, char* argv[]) {
     case VIO::FrontendType::kStereoImu: {
       vio_pipeline = std::make_unique<VIO::StereoImuPipeline>(vio_params);
     } break;
+    case VIO::FrontendType::k2MonoImu: {
+      vio_pipeline = std::make_unique<VIO::2MonoImuPipeline>(vio_params);
+    } break;
     default: {
       LOG(FATAL) << "Unrecognized Frontend type: "
                  << VIO::to_underlying(vio_params.frontend_type_)
-                 << ". 0: Mono, 1: Stereo.";
+                 << ". 0: Mono, 1: Stereo, 5: 2-Mono.";
     } break;
   }
 

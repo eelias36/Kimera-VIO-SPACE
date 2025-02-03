@@ -40,12 +40,12 @@ Mono2ImuPipeline::Mono2ImuPipeline(const VioParams& params,
                                      Visualizer3D::UniquePtr&& visualizer,
                                      DisplayBase::UniquePtr&& displayer,
                                      PreloadedVocab::Ptr&& preloaded_vocab)
-    : Pipeline(params), stereo_camera_(nullptr) {
-  //! Create Stereo Camera
+    : Pipeline(params), vis_camera_(nullptr), tir_camera_(nullptr) {
+  //! Create VIS and TIR Cameras
   CHECK_EQ(params.camera_params_.size(), 2u)
       << "Need two cameras for Mono2ImuPipeline.";
-  stereo_camera_ = std::make_shared<StereoCamera>(params.camera_params_.at(0),
-                                                  params.camera_params_.at(1));
+    vis_camera_ = std::make_shared<Camera>(params.camera_params_.at(0));
+    tir_camera_ = std::make_shared<Camera>(params.camera_params_.at(1));
 
   //! Create DataProvider
   data_provider_module_ = std::make_unique<StereoDataProviderModule>(
@@ -74,7 +74,7 @@ Mono2ImuPipeline::Mono2ImuPipeline(const VioParams& params,
   data_provider_module_->registerVioPipelineCallback(
       std::bind(&Mono2ImuPipeline::spinOnce, this, std::placeholders::_1));
 
-  //! Create Frontend
+  //! Create VIS Frontend
   vio_frontend_module_ = std::make_unique<VisionImuFrontendModule>(
       &frontend_input_queue_,
       parallel_run_,
@@ -83,7 +83,7 @@ Mono2ImuPipeline::Mono2ImuPipeline(const VioParams& params,
           params.imu_params_,
           gtsam::imuBias::ConstantBias(),
           params.frontend_params_,
-          stereo_camera_,
+          vis_camera_,
           FLAGS_visualize ? &display_input_queue_ : nullptr,
           FLAGS_log_output,
           params.odom_params_));
@@ -92,6 +92,19 @@ Mono2ImuPipeline::Mono2ImuPipeline(const VioParams& params,
       [&](double imu_time_shift_s) {
         data_provider_module_->setImuTimeShift(imu_time_shift_s);
       });
+  //! Create TIR Frontend
+  vio_tir_frontend_module_ = std::make_unique<VisionImuFrontendModule>(
+      &frontend_input_queue_,
+      parallel_run_,
+      VisionImuFrontendFactory::createFrontend(
+          params.frontend_type_,
+          params.imu_params_,
+          gtsam::imuBias::ConstantBias(),
+          params.frontend_params_,
+          tir_camera_,
+          FLAGS_visualize ? &display_input_queue_ : nullptr,
+          FLAGS_log_output,
+          params.odom_params_));
   vio_frontend_module_->registerOutputCallback(
       [&backend_input_queue](const FrontendOutputPacketBase::Ptr& output) {
         auto converted_output =
@@ -122,6 +135,13 @@ Mono2ImuPipeline::Mono2ImuPipeline(const VioParams& params,
       FLAGS_visualize && FLAGS_visualize_lmk_type);
 
   //! Create Backend
+  // TODO(marcus): get rid of fake stereocam
+  LOG_IF(FATAL, params.backend_params_->addBetweenStereoFactors_)
+      << "addBetweenStereoFactors is set to true, but this is a mono pipeline!";
+  const auto& calib = vis_camera_->getCalibration();
+  // TODO(marcus): hardcoded baseline!
+  StereoCalibPtr stereo_calib(new gtsam::Cal3_S2Stereo(
+      calib.fx(), calib.fy(), calib.skew(), calib.px(), calib.py(), 0.1));
   CHECK(backend_params_);
   vio_backend_module_ = std::make_unique<VioBackendModule>(
       &backend_input_queue_,
@@ -129,13 +149,14 @@ Mono2ImuPipeline::Mono2ImuPipeline(const VioParams& params,
       BackendFactory::createBackend(
           static_cast<BackendType>(params.backend_type_),
           // These two should be given by parameters.
-          stereo_camera_->getBodyPoseLeftCamRect(),
-          stereo_camera_->getStereoCalib(),
+          vis_camera_->getBodyPoseCam(),
+          stereo_calib,
           *backend_params_,
           imu_params_,
           backend_output_params,
           FLAGS_log_output,
           params.odom_params_));
+
   vio_backend_module_->registerOnFailureCallback(
       std::bind(&Mono2ImuPipeline::signalBackendFailure, this));
   vio_backend_module_->registerImuBiasUpdateCallback(
@@ -148,40 +169,40 @@ Mono2ImuPipeline::Mono2ImuPipeline(const VioParams& params,
                 std::cref(*CHECK_NOTNULL(vio_frontend_module_.get())),
                 std::placeholders::_1));
 
-  if (static_cast<VisualizationType>(FLAGS_viz_type) ==
-      VisualizationType::kMesh2dTo3dSparse) {
-    mesher_module_ = std::make_unique<MesherModule>(
-        parallel_run_,
-        MesherFactory::createMesher(
-            MesherType::PROJECTIVE,
-            MesherParams(stereo_camera_->getBodyPoseLeftCamRect(),
-                         params.camera_params_.at(0u).image_size_)));
-    //! Register input callbacks
-    vio_backend_module_->registerOutputCallback(
-        std::bind(&MesherModule::fillBackendQueue,
-                  std::ref(*CHECK_NOTNULL(mesher_module_.get())),
-                  std::placeholders::_1));
+//   if (static_cast<VisualizationType>(FLAGS_viz_type) ==
+//       VisualizationType::kMesh2dTo3dSparse) {
+//     mesher_module_ = std::make_unique<MesherModule>(
+//         parallel_run_,
+//         MesherFactory::createMesher(
+//             MesherType::PROJECTIVE,
+//             MesherParams(stereo_camera_->getBodyPoseLeftCamRect(),
+//                          params.camera_params_.at(0u).image_size_)));
+//     //! Register input callbacks
+//     vio_backend_module_->registerOutputCallback(
+//         std::bind(&MesherModule::fillBackendQueue,
+//                   std::ref(*CHECK_NOTNULL(mesher_module_.get())),
+//                   std::placeholders::_1));
 
-    auto& mesher_module = mesher_module_;
-    vio_frontend_module_->registerOutputCallback(
-        [&mesher_module](const FrontendOutputPacketBase::Ptr& output) {
-          auto converted_output =
-              std::dynamic_pointer_cast<StereoFrontendOutput>(output);
-          CHECK(converted_output);
-          CHECK_NOTNULL(mesher_module.get())
-              ->fillFrontendQueue(converted_output);
-        });
-  }
+//     auto& mesher_module = mesher_module_;
+//     vio_frontend_module_->registerOutputCallback(
+//         [&mesher_module](const FrontendOutputPacketBase::Ptr& output) {
+//           auto converted_output =
+//               std::dynamic_pointer_cast<StereoFrontendOutput>(output);
+//           CHECK(converted_output);
+//           CHECK_NOTNULL(mesher_module.get())
+//               ->fillFrontendQueue(converted_output);
+//         });
+//   }
 
   if (FLAGS_use_lcd) {
     lcd_module_ = std::make_unique<LcdModule>(
         parallel_run_,
         LcdFactory::createLcd(LoopClosureDetectorType::BoW,
                               params.lcd_params_,
-                              stereo_camera_->getLeftCamParams(),
-                              stereo_camera_->getBodyPoseLeftCamRect(),
-                              stereo_camera_,
-                              params.frontend_params_.stereo_matching_params_,
+                              vis_camera_->getCamParams(),
+                              vis_camera_->getBodyPoseCam(),
+                              std::nullopt,
+                              std::nullopt,
                               std::nullopt,
                               FLAGS_log_output,
                               std::move(preloaded_vocab)));

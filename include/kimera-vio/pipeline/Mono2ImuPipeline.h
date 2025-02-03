@@ -61,7 +61,8 @@ class Mono2ImuPipeline : public Pipeline {
 
  protected:
   //! Definition of sensor rig used
-  StereoCamera::ConstPtr stereo_camera_;
+  Camera::ConstPtr vis_camera_;
+  Camera::ConstPtr tir_camera_;
 };
 
 }  // namespace VIO

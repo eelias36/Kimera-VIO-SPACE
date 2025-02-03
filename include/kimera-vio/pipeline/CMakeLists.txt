@@ -1,6 +1,7 @@
 ### Add source code for stereoVIO
 target_sources(kimera_vio PRIVATE
   "${CMAKE_CURRENT_LIST_DIR}/MonoImuPipeline.h"
+  "${CMAKE_CURRENT_LIST_DIR}/Mono2ImuPipeline.h"
   "${CMAKE_CURRENT_LIST_DIR}/Pipeline.h"
   "${CMAKE_CURRENT_LIST_DIR}/Pipeline-definitions.h"
   "${CMAKE_CURRENT_LIST_DIR}/PipelinePayload.h"

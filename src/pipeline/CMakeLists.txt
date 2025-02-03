@@ -2,6 +2,7 @@
 target_sources(kimera_vio
     PRIVATE
     "${CMAKE_CURRENT_LIST_DIR}/MonoImuPipeline.cpp"
+    "${CMAKE_CURRENT_LIST_DIR}/Mono2ImuPipeline.cpp"
     "${CMAKE_CURRENT_LIST_DIR}/PipelineModule.cpp"
     "${CMAKE_CURRENT_LIST_DIR}/PipelinePayload.cpp"
     "${CMAKE_CURRENT_LIST_DIR}/PipelineParams.cpp"

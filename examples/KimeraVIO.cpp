@@ -89,7 +89,7 @@ int main(int argc, char* argv[]) {
       vio_pipeline = std::make_unique<VIO::StereoImuPipeline>(vio_params);
     } break;
     case VIO::FrontendType::k2MonoImu: {
-      vio_pipeline = std::make_unique<VIO::2MonoImuPipeline>(vio_params);
+      vio_pipeline = std::make_unique<VIO::Mono2ImuPipeline>(vio_params);
     } break;
     default: {
       LOG(FATAL) << "Unrecognized Frontend type: "

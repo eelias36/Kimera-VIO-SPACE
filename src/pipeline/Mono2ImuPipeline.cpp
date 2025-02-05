@@ -44,8 +44,8 @@ Mono2ImuPipeline::Mono2ImuPipeline(const VioParams& params,
   //! Create VIS and TIR Cameras
   CHECK_EQ(params.camera_params_.size(), 2u)
       << "Need two cameras for Mono2ImuPipeline.";
-    vis_camera_ = std::make_shared<Camera>(params.camera_params_.at(0));
-    tir_camera_ = std::make_shared<Camera>(params.camera_params_.at(1));
+  vis_camera_ = std::make_shared<Camera>(params.camera_params_.at(0));
+  tir_camera_ = std::make_shared<Camera>(params.camera_params_.at(1));
 
   //! Create DataProvider
   data_provider_module_ = std::make_unique<StereoDataProviderModule>(

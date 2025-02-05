@@ -52,11 +52,21 @@ class VisionImuFrontendFactory {
         LOG(FATAL) << "Tried to create a StereoVisionFrontEnd"
                    << "with a Mono Camera!";
       }
+      case FrontendType::k2MonoImu: {
+        return std::make_unique<MonoVisionImuFrontend>(frontend_params,
+                                                       imu_params,
+                                                       imu_initial_bias,
+                                                       camera,
+                                                       display_queue,
+                                                       log_output,
+                                                       odom_params);
+      }
       default: {
         LOG(FATAL) << "Requested frontend type is not supported.\n"
                    << "Currently supported frontend types:\n"
                    << "0: Mono + IMU \n"
                    << "1: Stereo + IMU \n"
+                   << "2: 2Mono + IMU \n"
                    << " but requested frontend: "
                    << static_cast<int>(frontend_type);
       }

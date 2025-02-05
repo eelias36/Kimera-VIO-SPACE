@@ -54,6 +54,7 @@ struct VioParams : public PipelineParams {
    * ├── LeftCameraParams.yaml
    * ├── RightCameraParams.yaml
    * ├── FrontendParams.yaml
+   * ├── FrontendTirParams.yaml
    * ├── BackendParams.yaml
    * ├── LcdParams.yaml
    * └── DisplayParams.yaml
@@ -84,6 +85,7 @@ struct VioParams : public PipelineParams {
    * @param left_camera_params_filepath  Left Camera params YAML file path.
    * @param right_camera_params_filepath Right Camera params YAML file path.
    * @param frontend_params_filepath Frontend params YAML file path.
+   * @param frontend_tir_params_filepath Frontend TIR params YAML file path.
    * @param backend_params_filepath Backend params YAML file path.
    * @param lcd_params_filepath Loop closure params YAML file path.
    * @param display_params_filepath Display params YAML file path.
@@ -91,6 +93,18 @@ struct VioParams : public PipelineParams {
    * @param odom_params_filepath External odometry params file path
    * @param should_parse Whether or not to attempt to read from the YAML files
    */
+  VioParams(const std::string& pipeline_params_filepath,
+            const std::string& imu_params_filepath,
+            const std::string& left_cam_params_filepath,
+            const std::string& right_cam_params_filepath,
+            const std::string& frontend_params_filepath,
+            const std::string& frontend_tir_params_filepath,
+            const std::string& backend_params_filepath,
+            const std::string& lcd_params_filepath,
+            const std::string& display_params_filepath,
+            const std::string& odom_params_filepath = "",
+            bool should_parse = true);
+
   VioParams(const std::string& pipeline_params_filepath,
             const std::string& imu_params_filepath,
             const std::string& left_cam_params_filepath,
@@ -129,6 +143,7 @@ struct VioParams : public PipelineParams {
   static constexpr char kLeftCameraFilename[] = "LeftCameraParams.yaml";
   static constexpr char kRightCameraFilename[] = "RightCameraParams.yaml";
   static constexpr char kFrontendFilename[] = "FrontendParams.yaml";
+  static constexpr char kFrontendTirFilename[] = "FrontendTirParams.yaml";
   static constexpr char kBackendFilename[] = "BackendParams.yaml";
   static constexpr char kLcdFilename[] = "LcdParams.yaml";
   static constexpr char kDisplayFilename[] = "DisplayParams.yaml";
@@ -140,6 +155,7 @@ struct VioParams : public PipelineParams {
   MultiCameraParams camera_params_;
   //! Pipeline Modules paramters
   FrontendParams frontend_params_;
+  FrontendParams frontend_tir_params_;
   //! Mind that this is shared btw the vio pipeline and dataprovider,
   //!  so that any changes to this pointer will affect both.
   BackendParams::Ptr backend_params_;
@@ -161,6 +177,7 @@ struct VioParams : public PipelineParams {
     return imu_params_ == rhs.imu_params_ &&
            camera_params_ == rhs.camera_params_ &&
            frontend_params_ == rhs.frontend_params_ &&
+           frontend_tir_params_ == rhs.frontend_tir_params_ &&
            backend_params_ == rhs.backend_params_ &&
            frontend_type_ == rhs.frontend_type_ &&
            backend_type_ == rhs.backend_type_ &&
@@ -176,6 +193,7 @@ struct VioParams : public PipelineParams {
   std::string left_cam_params_filepath_;
   std::string right_cam_params_filepath_;
   std::string frontend_params_filepath_;
+  std::string frontend_tir_params_filepath_;
   std::string backend_params_filepath_;
   std::string lcd_params_filepath_;
   std::string display_params_filepath_;

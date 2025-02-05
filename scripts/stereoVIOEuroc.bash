@@ -8,17 +8,18 @@
 # DATASET_PATH="/data/spacecraft/visible_close_2x"
 # DATASET_PATH="/data/spacecraft/visible_close_shadow"
 # DATASET_PATH="/data/spacecraft/visible_90min_withEclipse"
-DATASET_PATH="/data/spacecraft/visible_90min_2x"
+# DATASET_PATH="/data/spacecraft/visible_90min_2x"
 # DATASET_PATH="/data/spacecraft/visible_90min_orbitingLight"
 # DATASET_PATH="/data/spacecraft/visible_90min_withEclipse_2x"
 # DATASET_PATH="/data/spacecraft/thermal_90min_2x"
+DATASET_PATH="/data/spacecraft/fused_90min_2x"
 
 
 # Specify: 0 to run on EuRoC data, 1 to run on Kitti (not supported)
 DATASET_TYPE=0
 
 # Specify: 1 to enable the LoopClosureDetector, 0 to not.
-USE_LCD=1
+USE_LCD=0
 
 # Specify: 1 to enable logging of output files, 0 to not.
 LOG_OUTPUT=1
@@ -35,8 +36,9 @@ BUILD_PATH="../build"
 # PARAMS_PATH="../params/Euroc"
 # PARAMS_PATH="../params/EurocMonoOriginal"
 # PARAMS_PATH="../params/EurocMono"  # use this for monocular-mode (left cam only)
-PARAMS_PATH="../params/90mins"
+# PARAMS_PATH="../params/90mins"
 # PARAMS_PATH="../params/90mins_thermal"
+PARAMS_PATH="../params/90mins_fused"
 
 # Vocabulary path: specify where the vocabulary for loop closure is.
 VOCABULARY_PATH="../vocabulary"

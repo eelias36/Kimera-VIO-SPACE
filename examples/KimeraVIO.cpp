@@ -62,10 +62,14 @@ int main(int argc, char* argv[]) {
         case VIO::FrontendType::kStereoImu: {
           dataset_parser = std::make_unique<VIO::EurocDataProvider>(vio_params);
         } break;
+        case VIO::FrontendType::k2MonoImu: {
+          dataset_parser =
+              std::make_unique<VIO::EurocDataProvider>(vio_params);
+        } break;
         default: {
           LOG(FATAL) << "Unrecognized Frontend type: "
                      << VIO::to_underlying(vio_params.frontend_type_)
-                     << ". 0: Mono, 1: Stereo.";
+                     << ". 0: Mono, 1: Stereo, 4: 2-Mono.";
         }
       }
     } break;
@@ -94,7 +98,7 @@ int main(int argc, char* argv[]) {
     default: {
       LOG(FATAL) << "Unrecognized Frontend type: "
                  << VIO::to_underlying(vio_params.frontend_type_)
-                 << ". 0: Mono, 1: Stereo, 5: 2-Mono.";
+                 << ". 0: Mono, 1: Stereo, 4: 2-Mono.";
     } break;
   }
 

@@ -87,24 +87,13 @@ Mono2ImuPipeline::Mono2ImuPipeline(const VioParams& params,
           FLAGS_visualize ? &display_input_queue_ : nullptr,
           FLAGS_log_output,
           params.odom_params_));
-  auto& backend_input_queue = backend_input_queue_;  //! for the lambda below
+  
   vio_frontend_module_->registerImuTimeShiftUpdateCallback(
       [&](double imu_time_shift_s) {
         data_provider_module_->setImuTimeShift(imu_time_shift_s);
       });
-  //! Create TIR Frontend
-  vio_tir_frontend_module_ = std::make_unique<VisionImuFrontendModule>(
-      &frontend_input_queue_,
-      parallel_run_,
-      VisionImuFrontendFactory::createFrontend(
-          params.frontend_type_,
-          params.imu_params_,
-          gtsam::imuBias::ConstantBias(),
-          params.frontend_params_,
-          tir_camera_,
-          FLAGS_visualize ? &display_input_queue_ : nullptr,
-          FLAGS_log_output,
-          params.odom_params_));
+
+  auto& backend_input_queue = backend_input_queue_;  //! for the lambda below
   vio_frontend_module_->registerOutputCallback(
       [&backend_input_queue](const FrontendOutputPacketBase::Ptr& output) {
         auto converted_output =
@@ -125,6 +114,42 @@ Mono2ImuPipeline::Mono2ImuPipeline(const VioParams& params,
               << "Frontend did not output a keyframe, skipping Backend input.";
         }
       });
+
+  //! Create TIR Frontend
+  vio_tir_frontend_module_ = std::make_unique<VisionImuFrontendModule>(
+      &frontend_input_queue_,
+      parallel_run_,
+      VisionImuFrontendFactory::createFrontend(
+          params.frontend_type_,
+          params.imu_params_,
+          gtsam::imuBias::ConstantBias(),
+          params.frontend_tir_params_,
+          tir_camera_,
+          FLAGS_visualize ? &display_input_queue_ : nullptr,
+          FLAGS_log_output,
+          params.odom_params_));
+
+//   vio_tir_frontend_module_->registerOutputCallback(
+//       [&backend_input_queue](const FrontendOutputPacketBase::Ptr& output) {
+//         auto converted_output =
+//             std::dynamic_pointer_cast<StereoFrontendOutput>(output);
+//         CHECK(converted_output);
+
+//         if (converted_output && converted_output->is_keyframe_) {
+//           //! Only push to Backend input queue if it is a keyframe!
+//           backend_input_queue.push(std::make_unique<BackendInput>(
+//               converted_output->stereo_frame_lkf_.timestamp_,
+//               converted_output->status_stereo_measurements_,
+//               converted_output->pim_,
+//               converted_output->imu_acc_gyrs_,
+//               converted_output->body_lkf_OdomPose_body_kf_,
+//               converted_output->body_kf_world_OdomVel_body_kf_));
+//         } else {
+//           VLOG(5)
+//               << "Frontend did not output a keyframe, skipping Backend input.";
+//         }
+//       });
+
 
   //! Params for what the Backend outputs.
   // TODO(Toni): put this into Backend params.

@@ -37,7 +37,8 @@ class VisionImuFrontendFactory {
       const Camera::ConstPtr& camera,
       DisplayQueue* display_queue,
       bool log_output,
-      std::optional<OdometryParams> odom_params) {
+      std::optional<OdometryParams> odom_params,
+      std::optional<int> camera_number) {
     switch (frontend_type) {
       case FrontendType::kMonoImu: {
         return std::make_unique<MonoVisionImuFrontend>(frontend_params,
@@ -59,7 +60,8 @@ class VisionImuFrontendFactory {
                                                        camera,
                                                        display_queue,
                                                        log_output,
-                                                       odom_params);
+                                                       odom_params,
+                                                       camera_number);
       }
       default: {
         LOG(FATAL) << "Requested frontend type is not supported.\n"

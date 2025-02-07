@@ -86,7 +86,8 @@ Mono2ImuPipeline::Mono2ImuPipeline(const VioParams& params,
           vis_camera_,
           FLAGS_visualize ? &display_input_queue_ : nullptr,
           FLAGS_log_output,
-          params.odom_params_));
+          params.odom_params_,
+          0));
   
   vio_frontend_module_->registerImuTimeShiftUpdateCallback(
       [&](double imu_time_shift_s) {

@@ -124,6 +124,15 @@ int main(int argc, char* argv[]) {
         std::bind(&VIO::StereoImuPipeline::fillRightFrameQueue,
                   stereo_pipeline,
                   std::placeholders::_1));
+  } else if (vio_params.frontend_type_ == VIO::FrontendType::k2MonoImu) {
+    auto mono2_pipeline =
+        std::dynamic_pointer_cast<VIO::Mono2ImuPipeline>(vio_pipeline);
+    CHECK(mono2_pipeline);
+
+    dataset_parser->registerRightFrameCallback(
+        std::bind(&VIO::Mono2ImuPipeline::fillRightFrameQueue,
+                  mono2_pipeline,
+                  std::placeholders::_1));
   }
 
   // Spin dataset.

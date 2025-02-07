@@ -55,7 +55,8 @@ class VisionImuFrontend {
                     const ImuBias& imu_initial_bias,
                     DisplayQueue* display_queue,
                     bool log_output,
-                    std::optional<OdometryParams> odom_params = std::nullopt);
+                    std::optional<OdometryParams> odom_params = std::nullopt,
+                    std::optional<int> camera_number = -1);
 
   virtual ~VisionImuFrontend();
 
@@ -218,6 +219,8 @@ class VisionImuFrontend {
   std::optional<OdometryParams> odom_params_;
   // world_Pose_body for the last keyframe
   std::optional<gtsam::Pose3> world_OdomPose_body_lkf_;
+
+  int camera_number_;
 };
 
 }  // namespace VIO

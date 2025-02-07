@@ -24,7 +24,8 @@ VisionImuFrontend::VisionImuFrontend(const FrontendParams& frontend_params,
                                      const ImuBias& imu_initial_bias,
                                      DisplayQueue* display_queue,
                                      bool log_output,
-                                     std::optional<OdometryParams> odom_params)
+                                     std::optional<OdometryParams> odom_params,
+                                     std::optional<int> camera_number)
     : frontend_params_(frontend_params),
       frontend_state_(FrontendState::Bootstrap),
       frame_count_(0),
@@ -35,7 +36,8 @@ VisionImuFrontend::VisionImuFrontend(const FrontendParams& frontend_params,
       tracker_status_summary_(),
       display_queue_(display_queue),
       logger_(nullptr),
-      odom_params_(odom_params) {
+      odom_params_(odom_params),
+      camera_number_(camera_number) {
   imu_frontend_ = std::make_unique<ImuFrontend>(imu_params, imu_initial_bias);
   if (log_output) {
     logger_ = std::make_unique<FrontendLogger>();
@@ -49,6 +51,30 @@ VisionImuFrontend::~VisionImuFrontend() {
 
 FrontendOutputPacketBase::UniquePtr VisionImuFrontend::spinOnce(
     FrontendInputPacketBase::UniquePtr&& input) {
+
+  // Convert StereoImuSyncPacket to MonoImuSyncPacket if needed
+  if(camera_number_ > -1) {
+    input_stereo = castUnique<StereoImuSyncPacket>(std::move(input));
+    CHECK(input_stereo);
+    CHECK_LT(camera_number_, 2);
+
+    Frame::UniquePtr mono_frame;
+
+    if (camera_number_ == 0){
+      mono_frame = *input_stereo->getStereoFrame()->left_frame_
+    } else if (camera_number_ == 1)
+    {
+      mono_frame = *input_stereo->getStereoFrame()->right_frame_;
+    }
+    
+    input = std::make_unique<MonoImuSyncPacket>(
+        mono_frame,
+        input_stereo->getImuStamps(),
+        input_stereo->getImuAccGyrs(),
+        input_stereo->world_NavState_ext_odom_);
+  
+  }
+
   const FrontendState& frontend_state = frontend_state_;
   switch (frontend_state) {
     case FrontendState::Bootstrap:

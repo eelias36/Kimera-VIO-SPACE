@@ -38,7 +38,7 @@ class VisionImuFrontendFactory {
       DisplayQueue* display_queue,
       bool log_output,
       std::optional<OdometryParams> odom_params,
-      std::optional<int> camera_number) {
+      std::optional<int> camera_number = std::nullopt) {
     switch (frontend_type) {
       case FrontendType::kMonoImu: {
         return std::make_unique<MonoVisionImuFrontend>(frontend_params,

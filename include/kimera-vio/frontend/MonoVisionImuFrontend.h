@@ -46,7 +46,8 @@ class MonoVisionImuFrontend : public VisionImuFrontend {
       const Camera::ConstPtr& camera,
       DisplayQueue* display_queue = nullptr,
       bool log_output = false,
-      std::optional<OdometryParams> odom_params = std::nullopt);
+      std::optional<OdometryParams> odom_params = std::nullopt,
+      std::optional<int> camera_number = std::nullopt);
 
   virtual ~MonoVisionImuFrontend();
 

@@ -16,6 +16,9 @@
 
 #include "kimera-vio/initial/CrossCorrTimeAligner.h"
 #include "kimera-vio/utils/UtilsNumerical.h"
+#include "kimera-vio/frontend/MonoImuSyncPacket.h"
+#include "kimera-vio/frontend/StereoImuSyncPacket.h"
+#include "kimera-vio/frontend/Frame.h"
 
 namespace VIO {
 
@@ -53,22 +56,21 @@ FrontendOutputPacketBase::UniquePtr VisionImuFrontend::spinOnce(
     FrontendInputPacketBase::UniquePtr&& input) {
 
   // Convert StereoImuSyncPacket to MonoImuSyncPacket if needed
-  if(camera_number_ > -1) {
-    input_stereo = castUnique<StereoImuSyncPacket>(std::move(input));
+  if(camera_number_.has_value()){
+    auto input_stereo = castUnique<StereoImuSyncPacket>(std::move(input));
     CHECK(input_stereo);
-    CHECK_LT(camera_number_, 2);
 
     Frame::UniquePtr mono_frame;
-
-    if (camera_number_ == 0){
-      mono_frame = *input_stereo->getStereoFrame()->left_frame_
-    } else if (camera_number_ == 1)
-    {
-      mono_frame = *input_stereo->getStereoFrame()->right_frame_;
+    if (camera_number_ == 0) {
+      mono_frame = std::make_unique<Frame>(std::move(input_stereo->getStereoFrame().left_frame_));
+    } if( camera_number_ == 1) {
+      mono_frame = std::make_unique<Frame>(std::move(input_stereo->getStereoFrame().right_frame_));
+    } else {
+      LOG(FATAL) << "Invalid camera number: " << *camera_number_;
     }
     
     input = std::make_unique<MonoImuSyncPacket>(
-        mono_frame,
+        std::move(mono_frame),
         input_stereo->getImuStamps(),
         input_stereo->getImuAccGyrs(),
         input_stereo->world_NavState_ext_odom_);

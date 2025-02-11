@@ -33,13 +33,15 @@ MonoVisionImuFrontend::MonoVisionImuFrontend(
     const Camera::ConstPtr& camera,
     DisplayQueue* display_queue,
     bool log_output,
-    std::optional<OdometryParams> odom_params)
+    std::optional<OdometryParams> odom_params,
+    std::optional<int> camera_number)
     : VisionImuFrontend(frontend_params,
                         imu_params,
                         imu_initial_bias,
                         display_queue,
                         log_output,
-                        odom_params),
+                        odom_params,
+                        camera_number),
       mono_frame_k_(nullptr),
       mono_frame_km1_(nullptr),
       mono_frame_lkf_(nullptr),

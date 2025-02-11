@@ -61,12 +61,12 @@ FrontendOutputPacketBase::UniquePtr VisionImuFrontend::spinOnce(
     CHECK(input_stereo);
 
     Frame::UniquePtr mono_frame;
-    if (camera_number_ == 0) {
+    if (camera_number_.value() == 0) {
       mono_frame = std::make_unique<Frame>(std::move(input_stereo->getStereoFrame().left_frame_));
-    } if( camera_number_ == 1) {
+    } else if(camera_number_.value() == 1) {
       mono_frame = std::make_unique<Frame>(std::move(input_stereo->getStereoFrame().right_frame_));
     } else {
-      LOG(FATAL) << "Invalid camera number: " << *camera_number_;
+      LOG(FATAL) << "Invalid camera number: " << camera_number_.value();
     }
     
     input = std::make_unique<MonoImuSyncPacket>(

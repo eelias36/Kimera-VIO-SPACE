@@ -98,14 +98,14 @@ Mono2ImuPipeline::Mono2ImuPipeline(const VioParams& params,
   vio_frontend_module_->registerOutputCallback(
       [&backend_input_queue](const FrontendOutputPacketBase::Ptr& output) {
         auto converted_output =
-            std::dynamic_pointer_cast<StereoFrontendOutput>(output);
+            std::dynamic_pointer_cast<MonoFrontendOutput>(output);
         CHECK(converted_output);
 
         if (converted_output && converted_output->is_keyframe_) {
           //! Only push to Backend input queue if it is a keyframe!
           backend_input_queue.push(std::make_unique<BackendInput>(
-              converted_output->stereo_frame_lkf_.timestamp_,
-              converted_output->status_stereo_measurements_,
+              converted_output->frame_lkf_.timestamp_,
+              converted_output->status_mono_measurements_,
               converted_output->pim_,
               converted_output->imu_acc_gyrs_,
               converted_output->body_lkf_OdomPose_body_kf_,
@@ -128,7 +128,8 @@ Mono2ImuPipeline::Mono2ImuPipeline(const VioParams& params,
           tir_camera_,
           FLAGS_visualize ? &display_input_queue_ : nullptr,
           FLAGS_log_output,
-          params.odom_params_));
+          params.odom_params_,
+          1));
 
 //   vio_tir_frontend_module_->registerOutputCallback(
 //       [&backend_input_queue](const FrontendOutputPacketBase::Ptr& output) {
@@ -268,7 +269,7 @@ Mono2ImuPipeline::Mono2ImuPipeline(const VioParams& params,
     vio_frontend_module_->registerOutputCallback(
         [&visualizer_module](const FrontendOutputPacketBase::Ptr& output) {
           auto converted_output =
-              std::dynamic_pointer_cast<StereoFrontendOutput>(output);
+              std::dynamic_pointer_cast<MonoFrontendOutput>(output);
           CHECK(converted_output);
           CHECK_NOTNULL(visualizer_module.get())
               ->fillFrontendQueue(converted_output);

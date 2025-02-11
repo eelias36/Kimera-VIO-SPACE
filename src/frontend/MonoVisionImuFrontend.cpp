@@ -103,9 +103,9 @@ MonoFrontendOutput::UniquePtr MonoVisionImuFrontend::bootstrapSpinMono(
 MonoFrontendOutput::UniquePtr MonoVisionImuFrontend::nominalSpinMono(
     MonoFrontendInputPayload::UniquePtr&& input) {
   // For timing
-  utils::StatsCollector timing_stats_frame_rate("VioFrontend Frame Rate [ms]");
+  utils::StatsCollector timing_stats_frame_rate("Camera " + mono_camera_->getCamParams().camera_id_ + ": VioFrontend Frame Rate [ms]");
   utils::StatsCollector timing_stats_keyframe_rate(
-      "VioFrontend Keyframe Rate [ms]");
+      "Camera " + mono_camera_->getCamParams().camera_id_ + ": VioFrontend Keyframe Rate [ms]");
   auto start_time = utils::Timer::tic();
 
   const Frame& mono_frame_k = input->getFrame();

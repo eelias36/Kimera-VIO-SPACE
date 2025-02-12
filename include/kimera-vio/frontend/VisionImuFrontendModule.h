@@ -51,7 +51,11 @@ class VisionImuFrontendModule
       FrontendInputPacketBase::UniquePtr input);
 
   inline bool isInitialized() const {
-    return (vio_frontend_->isInitialized() && vio_tir_frontend_->isInitialized());
+    if (vio_tir_frontend_.has_value()) {
+      return (vio_frontend_->isInitialized() && vio_tir_frontend_.value()->isInitialized());
+    } else {
+      return vio_frontend_->isInitialized();
+    }
   }
 
   //! Imu related

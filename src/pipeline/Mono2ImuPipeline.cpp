@@ -47,9 +47,6 @@ Mono2ImuPipeline::Mono2ImuPipeline(const VioParams& params,
   vis_camera_ = std::make_shared<Camera>(params.camera_params_.at(0));
   tir_camera_ = std::make_shared<Camera>(params.camera_params_.at(1));
 
-  CHECK_EQ(params.frontend_params_.size(), 2u)
-      << "Need two frontend params for Mono2ImuPipeline.";
-
   //! Create DataProvider
   data_provider_module_ = std::make_unique<StereoDataProviderModule>(
       &frontend_input_queue_,
@@ -85,7 +82,7 @@ Mono2ImuPipeline::Mono2ImuPipeline(const VioParams& params,
           params.frontend_type_,
           params.imu_params_,
           gtsam::imuBias::ConstantBias(),
-          params.frontend_params_.at(0),
+          params.frontend_params_,
           vis_camera_,
           FLAGS_visualize ? &display_input_queue_ : nullptr,
           FLAGS_log_output,
@@ -94,7 +91,7 @@ Mono2ImuPipeline::Mono2ImuPipeline(const VioParams& params,
           params.frontend_type_,
           params.imu_params_,
           gtsam::imuBias::ConstantBias(),
-          params.frontend_params_.at(1),
+          params.frontend_tir_params_,
           tir_camera_,
           FLAGS_visualize ? &display_input_queue_ : nullptr,
           FLAGS_log_output,

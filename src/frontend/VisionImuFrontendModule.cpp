@@ -23,7 +23,7 @@ VisionImuFrontendModule::VisionImuFrontendModule(
     std::optional<VisionImuFrontend::UniquePtr> vio_tir_frontend)
     : SIMO(input_queue, "VioFrontend", parallel_run),
       vio_frontend_(std::move(vio_frontend)),
-      vio_tir_frontend(std::move(vio_frontend)) {
+      vio_tir_frontend_(std::move(vio_frontend)) {
   CHECK(vio_frontend_);
 }
 

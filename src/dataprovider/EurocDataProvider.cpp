@@ -440,17 +440,17 @@ bool EurocDataProvider::parseDataset() {
 
   // Parse Camera data.
   CameraImageLists left_cam_image_list;
-  // CameraImageLists right_cam_image_list; // ERIC ELIAS
+  CameraImageLists right_cam_image_list;
   parseCameraData(kLeftCamName, &left_cam_image_list);
   if (VLOG_IS_ON(1)) left_cam_image_list.print();
-  // parseCameraData(kRightCamName, &right_cam_image_list); // ERIC ELIAS
-  // if (VLOG_IS_ON(1)) right_cam_image_list.print(); // ERIC ELIAS
+  parseCameraData(kRightCamName, &right_cam_image_list);
+  if (VLOG_IS_ON(1)) right_cam_image_list.print();
   // TODO(Toni): remove camera_names_ and camera_image_lists_...
   camera_names_.push_back(kLeftCamName);
-  // camera_names_.push_back(kRightCamName); // ERIC ELIAS
+  camera_names_.push_back(kRightCamName);
   // WARNING Use [x] not .at() because we are adding entries that do not exist.
   camera_image_lists_[kLeftCamName] = left_cam_image_list;
-  // camera_image_lists_[kRightCamName] = right_cam_image_list; // ERIC ELIAS
+  camera_image_lists_[kRightCamName] = right_cam_image_list;
   // CHECK(sanityCheckCameraData(camera_names_, &camera_image_lists_));
 
   // Parse Ground-Truth data.

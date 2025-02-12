@@ -203,7 +203,6 @@ class Pipeline {
 
   virtual bool isInitialized() const {
     return vio_frontend_module_->isInitialized() &&
-           vio_tir_frontend_module_->isInitialized() &&
            vio_backend_module_->isInitialized();
   }
 
@@ -266,7 +265,6 @@ class Pipeline {
 
   // Vision Frontend
   VisionImuFrontendModule::UniquePtr vio_frontend_module_;
-  VisionImuFrontendModule::UniquePtr vio_tir_frontend_module_;
 
   //! Vision Frontend payloads.
   VisionImuFrontendModule::InputQueue frontend_input_queue_;

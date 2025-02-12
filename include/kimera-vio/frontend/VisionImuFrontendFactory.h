@@ -15,6 +15,7 @@
 #pragma once
 
 #include "kimera-vio/frontend/MonoVisionImuFrontend.h"
+#include "kimera-vio/frontend/Mono2VisionImuFrontend.h"
 #include "kimera-vio/frontend/StereoVisionImuFrontend.h"
 #include "kimera-vio/frontend/VisionImuFrontend.h"
 #include "kimera-vio/imu-frontend/ImuFrontend-definitions.h"
@@ -48,6 +49,15 @@ class VisionImuFrontendFactory {
                                                        log_output,
                                                        odom_params);
       }
+      case FrontendType::k2MonoImu: {
+        return std::make_unique<Mono2VisionImuFrontend>(frontend_params,
+                                                       imu_params,
+                                                       imu_initial_bias,
+                                                       camera,
+                                                       display_queue,
+                                                       log_output,
+                                                       odom_params);
+      }
       case FrontendType::kStereoImu: {
         LOG(FATAL) << "Tried to create a StereoVisionFrontEnd"
                    << "with a Mono Camera!";
@@ -57,6 +67,7 @@ class VisionImuFrontendFactory {
                    << "Currently supported frontend types:\n"
                    << "0: Mono + IMU \n"
                    << "1: Stereo + IMU \n"
+                   << "4: 2 Mono + IMU \n"
                    << " but requested frontend: "
                    << static_cast<int>(frontend_type);
       }

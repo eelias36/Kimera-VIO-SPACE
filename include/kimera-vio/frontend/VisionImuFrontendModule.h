@@ -37,10 +37,12 @@ class VisionImuFrontendModule
    * @param output_queue
    * @param parallel_run
    * @param vio_frontend
+   * @param vio_tir_frontend
    */
   explicit VisionImuFrontendModule(InputQueue* input_queue,
                                    bool parallel_run,
-                                   VisionImuFrontend::UniquePtr vio_frontend);
+                                   VisionImuFrontend::UniquePtr vio_frontend,
+                                   std::optional<VisionImuFrontend::UniquePtr> vio_tir_frontend = std::nullopt);
 
   virtual ~VisionImuFrontendModule() = default;
 
@@ -48,7 +50,9 @@ class VisionImuFrontendModule
   virtual FrontendOutputPacketBase::UniquePtr spinOnce(
       FrontendInputPacketBase::UniquePtr input);
 
-  inline bool isInitialized() const { return vio_frontend_->isInitialized(); }
+  inline bool isInitialized() const {
+    return (vio_frontend_->isInitialized() && vio_tir_frontend_->isInitialized());
+  }
 
   //! Imu related
   inline void updateAndResetImuBias(const ImuBias& imu_bias) const {
@@ -75,6 +79,7 @@ class VisionImuFrontendModule
 
  private:
   VisionImuFrontend::UniquePtr vio_frontend_;
+  std::optional<VisionImuFrontend::UniquePtr> vio_tir_frontend_;
 };
 
 }  // namespace VIO

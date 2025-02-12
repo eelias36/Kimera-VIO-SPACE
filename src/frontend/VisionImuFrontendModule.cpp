@@ -19,9 +19,11 @@ namespace VIO {
 VisionImuFrontendModule::VisionImuFrontendModule(
     InputQueue* input_queue,
     bool parallel_run,
-    VisionImuFrontend::UniquePtr vio_frontend)
+    VisionImuFrontend::UniquePtr vio_frontend,
+    std::optional<VisionImuFrontend::UniquePtr> vio_tir_frontend)
     : SIMO(input_queue, "VioFrontend", parallel_run),
-      vio_frontend_(std::move(vio_frontend)) {
+      vio_frontend_(std::move(vio_frontend)),
+      vio_tir_frontend(std::move(vio_frontend)) {
   CHECK(vio_frontend_);
 }
 

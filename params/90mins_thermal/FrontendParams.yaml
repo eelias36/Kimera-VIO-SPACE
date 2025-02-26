@@ -4,7 +4,7 @@
 klt_win_size: 24
 klt_max_iter: 30
 klt_max_level: 4
-klt_eps: 0.05 # 0.1
+klt_eps: 0.01 # 0.1
 maxFeatureAge: 10 # 25
 
 # Detector Params
@@ -18,7 +18,7 @@ maxFeaturesPerFrame: 300 #300
 # Good Features To Track specific parameters
 quality_level: 0.1 # 0.001
 min_distance: 15 # 20
-block_size: 3
+block_size: 5 # 3
 use_harris_detector: 0
 k: 0.04
 

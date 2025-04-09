@@ -589,6 +589,7 @@ void PipelineLogger::logPipelineOverallTiming(
 LoopClosureDetectorLogger::LoopClosureDetectorLogger()
     : output_lcd_("output_lcd_result.csv"),
       output_traj_("traj_pgo.csv"),
+      output_traj_realtime_("traj_pgo_realtime.csv"),
       output_status_("output_lcd_status.csv"),
       output_geom_verif_("output_lcd_geom_verif.csv"),
       output_pose_recovery_("output_lcd_pose_recovery.csv"),
@@ -602,6 +603,7 @@ void LoopClosureDetectorLogger::logTimestampMap(
 void LoopClosureDetectorLogger::logLCDResult(const LcdOutput& lcd_output) {
   logLoopClosure(lcd_output);
   logOptimizedTraj(lcd_output);
+  logOptimizedTrajRealTime(lcd_output);
 }
 
 void LoopClosureDetectorLogger::logLoopClosure(const LcdOutput& lcd_output) {
@@ -703,6 +705,26 @@ void LoopClosureDetectorLogger::logOptimizedTraj(const LcdOutput& lcd_output) {
                        << "," << trans.z() << "," << quat.w() << "," << quat.x()
                        << "," << quat.y() << "," << quat.z() << std::endl;
   }
+}
+
+void LoopClosureDetectorLogger::logOptimizedTrajRealTime(const LcdOutput& lcd_output) {
+  // We log the full optimized trajectory in csv format.
+  std::ofstream& output_stream_traj_realtime = output_traj_realtime_.ofstream_;
+  bool& is_header_written = is_header_written_traj_realtime_;
+
+  if (!is_header_written) {
+    output_stream_traj_realtime << "#timestamp_kf,x,y,z,qw,qx,qy,qz" << std::endl;
+    is_header_written = true;
+  }
+
+  size_t i = lcd_output.states_.size() - 1;
+  const gtsam::Pose3& pose = lcd_output.states_.at<gtsam::Pose3>(i);
+  const gtsam::Point3& trans = pose.translation();
+  const gtsam::Quaternion& quat = pose.rotation().toQuaternion();
+
+  output_stream_traj_realtime << ts_map_.at(i) << "," << trans.x() << "," << trans.y()
+                              << "," << trans.z() << "," << quat.w() << "," << quat.x()
+                              << "," << quat.y() << "," << quat.z() << std::endl;
 }
 
 void LoopClosureDetectorLogger::logDebugInfo(const LcdDebugInfo& debug_info) {

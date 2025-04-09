@@ -263,12 +263,14 @@ class LoopClosureDetectorLogger {
                        const Timestamp& timestamp_match,
                        const gtsam::Pose3& bodyRef_Pose_bodyCur);
   void logOptimizedTraj(const LcdOutput& lcd_output);
+  void logOptimizedTrajRealTime(const LcdOutput& lcd_output);
   void logDebugInfo(const LcdDebugInfo& debug_info);
 
  private:
   // Filenames to be saved in the output folder.
   OfstreamWrapper output_lcd_;
   OfstreamWrapper output_traj_;
+  OfstreamWrapper output_traj_realtime_;
   OfstreamWrapper output_status_;
   OfstreamWrapper output_geom_verif_;
   OfstreamWrapper output_pose_recovery_;
@@ -277,6 +279,7 @@ class LoopClosureDetectorLogger {
   bool is_header_written_status_ = false;
   bool is_header_written_geom_verif_ = false;
   bool is_header_written_pose_recovery_ = false;
+  bool is_header_written_traj_realtime_ = false;
 };
 
 }  // namespace VIO

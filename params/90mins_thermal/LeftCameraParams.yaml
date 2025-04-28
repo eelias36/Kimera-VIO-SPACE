@@ -17,8 +17,8 @@ resolution: [640, 512]
 camera_model: pinhole
 # focal length (pixels) = focal length (mm) * sensor width (pixels) / sensor width (mm)
 # 1422.22222222 = 80 * 640 / 36
-# 1706.66666667 = 80 * 512 / 24
-intrinsics: [1422.22222222, 1706.66666667, 320.0, 256.0] #fu, fv, cu, cv
+# 1422.22222222 = 80 * 512 / 28.8
+intrinsics: [1422.22222222, 1422.22222222, 320.0, 256.0] #fu, fv, cu, cv
 distortion_model: radial-tangential
 distortion_coefficients: [0.0, 0.0, 0.0, 0.0] #[-0.28340811, 0.07395907, 0.00019359, 1.76187114e-05]
 

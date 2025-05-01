@@ -52,7 +52,7 @@ max_lc_cached_before_optimize: 10 # 10
 #TRACKER PARAMETERS for outlier rejection
 disparity_threshold: 0.5
 
-min_nr_2d2d_inliers: 11 #8 # 20 # 250 # 10
+min_nr_2d2d_inliers: 12 #8 # 20 # 250 # 10
 min_nr_3d3d_inliers: 5
 min_nr_2d3d_inliers: 20
 

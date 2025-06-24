@@ -13,13 +13,15 @@
 # DATASET_PATH="/data/spacecraft/visible_90min_orbitingLight"
 # DATASET_PATH="/data/spacecraft/visible_90min_withEclipse_2x"
 # DATASET_PATH="/data/spacecraft/thermal_90min_2x"
-# DATASET_PATH="/data/spacecraft/fused_orbitingLight"
+# DATASET_PATH="/data/spacecraft/fused_tsfisd_orbitingLight"
 # DATASET_PATH="/data/spacecraft/fused_tsfisd_withEclipse_0.1clahe_bilinear"
 # DATASET_PATH="/data/spacecraft/fused_tsfisd_orbitingLight"
 # DATASET_PATH="/data/spacecraft/fused_tsfisd_goodLighting"
-# DATASET_PATH="/data/spacecraft/thermal_highFid_fixedAtt"
-DATASET_PATH="/data/spacecraft/visible_highFid_fixedAtt"
-# DATASET_PATH="/data/spacecraft/fused_highFid_fixedAtt"
+# DATASET_PATH="/data/spacecraft/highFid/thermal_highFid_fixedAtt"
+# DATASET_PATH="/data/spacecraft/highFid/visible_highFid_fixedAtt"
+# DATASET_PATH="/data/spacecraft/highFid/fused_highFid_fixedAtt"
+# DATASET_PATH="/data/spacecraft/highFid/thermal_highFid_fixedAtt"
+DATASET_PATH="/data/spacecraft/highFid/visible_highFid_fixedAtt"
 
 
 # Specify: 0 to run on EuRoC data, 1 to run on Kitti (not supported)
@@ -43,11 +45,13 @@ BUILD_PATH="../build"
 # PARAMS_PATH="../params/Euroc"
 # PARAMS_PATH="../params/EurocMonoOriginal"
 # PARAMS_PATH="../params/EurocMono"  # use this for monocular-mode (left cam only)
-PARAMS_PATH="../params/90mins"
+# PARAMS_PATH="../params/90mins"
 # PARAMS_PATH="../params/90mins_thermal"
 # PARAMS_PATH="../params/90mins_adf"
 # PARAMS_PATH="../params/90mins_adf_tsfisd"
-# PARAMS_PATH="../params/thermal_highFid"
+PARAMS_PATH="../params/highFid_vis"
+# PARAMS_PATH="../params/highFid_tir"
+# PARAMS_PATH="../params/highFid_fused"
 
 # Vocabulary path: specify where the vocabulary for loop closure is.
 VOCABULARY_PATH="../vocabulary"

@@ -955,6 +955,17 @@ void VioBackend::addImuFactor(const FrameId& from_id,
               gtsam::Symbol(kImuBiasSymbolChar, to_id),
               zero_bias,
               bias_noise_model);
+
+      // // Force accel bias to zero using a prior factor
+      // // Define a noise model where gyro bias is unconstrained (high variance)
+      // gtsam::Vector sigmas = (gtsam::Vector(6) << 1e-6, 1e-6, 1e-6, 1e6, 1e6, 1e6).finished();  
+      // auto constrainAccelBiasNoise = gtsam::noiseModel::Diagonal::Sigmas(sigmas);
+
+      // new_imu_prior_and_other_factors_
+      //     .emplace_shared<gtsam::PriorFactor<gtsam::imuBias::ConstantBias>>(
+      //         gtsam::Symbol(kImuBiasSymbolChar, from_id),
+      //         zero_bias,
+      //         constrainAccelBiasNoise);
       break;
     }
     default: {

@@ -133,8 +133,14 @@ void Tracker::featureTracking(
 
   std::vector<uchar> status;
   std::vector<float> error;
+  double minVal, maxVal;
+  cv::minMaxLoc(cur_frame->img_, &minVal, &maxVal);
   if (px_ref.size() == 0u) {
     LOG(ERROR) << "No keypoints in reference frame. Skipping optical flow tracking.";
+  } else if (maxVal < 50) {
+    // Check if all pixels in the current frame are below a certain value (e.g., 10)
+    LOG(ERROR) << "All pixels in the current frame are below threshold. Skipping optical flow tracking.";
+    status.resize(indices_of_valid_landmarks.size(), 0);
   } else {
     auto time_lukas_kanade_tic = utils::Timer::tic();
     cv::calcOpticalFlowPyrLK(ref_frame->img_,
@@ -172,7 +178,7 @@ void Tracker::featureTracking(
     const size_t& idx_valid_lmk = indices_of_valid_landmarks[i];
     const size_t& lmk_age = ref_frame->landmarks_age_[idx_valid_lmk];
     const LandmarkId& lmk_id = ref_frame->landmarks_[idx_valid_lmk];
-
+    
     // if we tracked keypoint and feature track is not too long
     if (!status[i] || lmk_age > tracker_params_.max_feature_track_age_) {
       // we are marking this bad in the ref_frame since features

@@ -242,24 +242,32 @@ StatusMonoMeasurementsPtr MonoVisionImuFrontend::processFrame(
 
   mono_frame_k_ = std::make_shared<Frame>(cur_frame);
 
-  VLOG(2) << "Starting feature tracking...";
-  gtsam::Rot3 ref_frame_R_cur_frame =
-      keyframe_R_ref_frame_.inverse().compose(keyframe_R_cur_frame);
-  tracker_->featureTracking(mono_frame_km1_.get(),
-                            mono_frame_k_.get(),
-                            ref_frame_R_cur_frame,
-                            frontend_params_.feature_detector_params_);
-  if (feature_tracks) {
-    *feature_tracks =
-        tracker_->getTrackerImage(*mono_frame_lkf_, *mono_frame_k_);
-  }
-  VLOG(2) << "Finished feature tracking.";
-
   // TODO(marcus): need another structure for monocular slam
   tracker_status_summary_.kfTrackingStatus_mono_ = TrackingStatus::INVALID;
   tracker_status_summary_.kfTrackingStatus_stereo_ = TrackingStatus::DISABLED;
 
   MonoMeasurements smart_mono_measurements;
+
+  VLOG(2) << "Starting feature tracking...";
+  // check if mono frame k has a max pixel value above a minimum threshold
+  double minVal, maxVal;
+  cv::minMaxLoc(mono_frame_k_->img_, &minVal, &maxVal);
+  if (maxVal < 40) {
+    LOG(ERROR) << "Skipping feature tracking for frame " << mono_frame_k_->id_
+               << " with max pixel value: " << maxVal;
+  } else {
+    gtsam::Rot3 ref_frame_R_cur_frame =
+        keyframe_R_ref_frame_.inverse().compose(keyframe_R_cur_frame);
+    tracker_->featureTracking(mono_frame_km1_.get(),
+                              mono_frame_k_.get(),
+                              ref_frame_R_cur_frame,
+                              frontend_params_.feature_detector_params_);
+    if (feature_tracks) {
+      *feature_tracks =
+          tracker_->getTrackerImage(*mono_frame_lkf_, *mono_frame_k_);
+    }
+  }
+  VLOG(2) << "Finished feature tracking.";
 
   // determine if frame should be a keyframe
   const bool new_keyframe = shouldBeKeyframe(*mono_frame_k_, *mono_frame_lkf_);

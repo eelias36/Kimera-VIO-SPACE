@@ -386,8 +386,22 @@ bool EurocDataProvider::parseGtData(const std::string& input_dataset_path,
     // Sanity check.
     gtsam::Quaternion q = rot.toQuaternion();
     // Figure out sign for quaternion.
-    if (std::fabs(q.w() + gt_data_raw[3]) < std::fabs(q.w() - gt_data_raw[3])) {
-      q.coeffs() = -1.0 * q.coeffs();
+    if (std::fabs(q.w()) > 1e-3){
+      if (std::fabs(q.w() + gt_data_raw[3]) < std::fabs(q.w() - gt_data_raw[3])) {
+        q.coeffs() = -1.0 * q.coeffs();
+      }
+    } else if (std::fabs(q.x()) > 1e-3){
+      if (std::fabs(q.x() + gt_data_raw[4]) < std::fabs(q.x() - gt_data_raw[4])) {
+        q.coeffs() = -1.0 * q.coeffs();
+      }
+    } else if (std::fabs(q.y()) > 1e-3) {
+      if (std::fabs(q.y() + gt_data_raw[5]) < std::fabs(q.y() - gt_data_raw[5])) {
+        q.coeffs() = -1.0 * q.coeffs();
+      }
+    } else if (std::fabs(q.z()) > 1e-3) {
+      if (std::fabs(q.z() + gt_data_raw[6]) < std::fabs(q.z() - gt_data_raw[6])) {
+        q.coeffs() = -1.0 * q.coeffs();
+      }
     }
 
     LOG_IF(FATAL,
@@ -399,7 +413,11 @@ bool EurocDataProvider::parseGtData(const std::string& input_dataset_path,
         << "(" << q.w() << "," << gt_data_raw[3] << ") "
         << "(" << q.x() << "," << gt_data_raw[4] << ") "
         << "(" << q.y() << "," << gt_data_raw[5] << ") "
-        << "(" << q.z() << "," << gt_data_raw[6] << ").";
+        << "(" << q.z() << "," << gt_data_raw[6] << ")."
+        << (fabs(q.w() - gt_data_raw[3])) << ","
+        << (fabs(q.x() - gt_data_raw[4])) << ","
+        << (fabs(q.y() - gt_data_raw[5])) << ","
+        << (fabs(q.z() - gt_data_raw[6])) << ".";
 
     gt_curr.pose_ = gtsam::Pose3(rot, position);
     gt_curr.velocity_ =

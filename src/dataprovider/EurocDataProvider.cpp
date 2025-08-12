@@ -413,11 +413,7 @@ bool EurocDataProvider::parseGtData(const std::string& input_dataset_path,
         << "(" << q.w() << "," << gt_data_raw[3] << ") "
         << "(" << q.x() << "," << gt_data_raw[4] << ") "
         << "(" << q.y() << "," << gt_data_raw[5] << ") "
-        << "(" << q.z() << "," << gt_data_raw[6] << ")."
-        << (fabs(q.w() - gt_data_raw[3])) << ","
-        << (fabs(q.x() - gt_data_raw[4])) << ","
-        << (fabs(q.y() - gt_data_raw[5])) << ","
-        << (fabs(q.z() - gt_data_raw[6])) << ".";
+        << "(" << q.z() << "," << gt_data_raw[6] << ").";
 
     gt_curr.pose_ = gtsam::Pose3(rot, position);
     gt_curr.velocity_ =

@@ -19,14 +19,20 @@
 # DATASET_PATH="/data/spacecraft/fused_tsfisd_goodLighting"
 # DATASET_PATH="/data/spacecraft/thermal_highFid_fixedAtt"
 # DATASET_PATH="/data/spacecraft/visible_highFid_fixedAtt"
-# DATASET_PATH="/data/spacecraft/fused_highFid_fixedAtt"
-DATASET_PATH="/data/spacecraft/realOrbits/iss_orbit_15m/vis"
+# DATASET_PATH="/data/spacecraft/highFid/fused_highFid_fixedAtt"
+# DATASET_PATH="/data/spacecraft/realOrbits/iss_orbit_15m/vis"
+# DATASET_PATH="/data/spacecraft/realOrbits/iss_orbit_15m/vis_highRes"
+# DATASET_PATH="/data/spacecraft/realOrbits/iss_orbit_15-25m/vis"
+# DATASET_PATH="/data/spacecraft/realOrbits/iss_orbit_15m/tir"
+# DATASET_PATH="/data/spacecraft/realOrbits/iss_orbit_15-25m/tir"
+DATASET_PATH="/data/spacecraft/realOrbits/iss_orbit_15m/fused"
+# DATASET_PATH="/data/spacecraft/realOrbits/iss_orbit_15-25m/fused"
 
 # Specify: 0 to run on EuRoC data, 1 to run on Kitti (not supported)
 DATASET_TYPE=0
 
 # Specify: 1 to enable the LoopClosureDetector, 0 to not.
-USE_LCD=0
+USE_LCD=1
 
 # Specify: 1 to enable logging of output files, 0 to not.
 LOG_OUTPUT=1
@@ -48,7 +54,11 @@ BUILD_PATH="../build"
 # PARAMS_PATH="../params/90mins_adf"
 # PARAMS_PATH="../params/90mins_adf_tsfisd"
 # PARAMS_PATH="../params/thermal_highFid"
-PARAMS_PATH="../params/realOrbit_vis"
+# PARAMS_PATH="../params/realOrbit_vis"
+# PARAMS_PATH="../params/realOrbit_vis_highRes"
+# PARAMS_PATH="../params/realOrbit_tir"
+PARAMS_PATH="../params/realOrbit_fused"
+
 # Vocabulary path: specify where the vocabulary for loop closure is.
 VOCABULARY_PATH="../vocabulary"
 

@@ -444,6 +444,7 @@ class LoopClosureDetector {
   std::unique_ptr<KimeraRPGO::RobustSolver> pgo_;
   std::pair<gtsam::Symbol, gtsam::Pose3> W_Pose_B_kf_vio_;
   gtsam::SharedNoiseModel shared_noise_model_;
+  gtsam::SharedNoiseModel shared_noise_model_lc_;
 
   // Queue-checking callback
   IsBackendQueueFilledCallback is_backend_queue_filled_cb_;

@@ -86,6 +86,10 @@ bool LoopClosureDetectorParams::parseYAML(const std::string& filepath) {
                            &betweenRotationPrecision_);
   yaml_parser.getYamlParam("betweenTranslationPrecision",
                            &betweenTranslationPrecision_);
+  yaml_parser.getYamlParam("betweenRotationPrecision_lc",
+                           &betweenRotationPrecision_lc_);
+  yaml_parser.getYamlParam("betweenTranslationPrecision_lc",
+                           &betweenTranslationPrecision_lc_);
   yaml_parser.getYamlParam("odom_rot_threshold", &odom_rot_threshold_);
   yaml_parser.getYamlParam("odom_trans_threshold", &odom_trans_threshold_);
   yaml_parser.getYamlParam("pcm_rot_threshold", &pcm_rot_threshold_);
@@ -227,6 +231,10 @@ void LoopClosureDetectorParams::print() const {
                         betweenRotationPrecision_,
                         "betweenTranslationPrecision_: ",
                         betweenTranslationPrecision_,
+                        "betweenRotationPrecision_lc_: ",
+                        betweenRotationPrecision_lc_,
+                        "betweenTranslationPrecision_lc_: ",
+                        betweenTranslationPrecision_lc_,
 
                         "odom_rot_threshold_: ",
                         odom_rot_threshold_,
@@ -284,6 +292,10 @@ bool LoopClosureDetectorParams::equals(const LoopClosureDetectorParams& lp2,
           tol) &&
          (fabs(betweenTranslationPrecision_ -
                lp2.betweenTranslationPrecision_) <= tol) &&
+         (fabs(betweenRotationPrecision_lc_ - lp2.betweenRotationPrecision_lc_) <=
+          tol) &&
+         (fabs(betweenTranslationPrecision_lc_ -
+               lp2.betweenTranslationPrecision_lc_) <= tol) &&
 
          (fabs(odom_rot_threshold_ - lp2.odom_rot_threshold_) <= tol) &&
          (fabs(odom_trans_threshold_ - lp2.odom_trans_threshold_) <= tol) &&

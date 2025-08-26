@@ -116,6 +116,11 @@ LoopClosureDetector::LoopClosureDetector(
   precisions.tail<3>().setConstant(lcd_params_.betweenTranslationPrecision_);
   shared_noise_model_ = gtsam::noiseModel::Diagonal::Precisions(precisions);
 
+  gtsam::Vector6 precisions_lc;
+  precisions_lc.head<3>().setConstant(lcd_params_.betweenRotationPrecision_lc_);
+  precisions_lc.tail<3>().setConstant(lcd_params_.betweenTranslationPrecision_lc_);
+  shared_noise_model_lc_ = gtsam::noiseModel::Diagonal::Precisions(precisions_lc);
+
   // Outlier rejection initialization (inside of tracker)
   tracker_ = std::make_unique<Tracker>(
       lcd_params.tracker_params_,
@@ -321,7 +326,7 @@ LcdOutput::UniquePtr LoopClosureDetector::spinOnce(const LcdInput& input) {
           LoopClosureFactor(loop_result.match_id_,
                             loop_result.query_id_,
                             loop_result.relative_pose_,
-                            shared_noise_model_));
+                            shared_noise_model_lc_));
     }
 
     auto update_duration = utils::Timer::toc(tic).count();

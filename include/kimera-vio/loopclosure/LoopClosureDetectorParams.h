@@ -110,6 +110,8 @@ class LoopClosureDetectorParams : public PipelineParams {
 
   double betweenRotationPrecision_ = 1 / (0.1 * 0.1);
   double betweenTranslationPrecision_ = 1 / (0.1 * 0.1);
+  double betweenRotationPrecision_lc_ = 1 / (0.1 * 0.1);
+  double betweenTranslationPrecision_lc_ = 1 / (0.1 * 0.1);
 
   ////////////////////////////// PGO solver params /////////////////////////////
   double odom_rot_threshold_ = 0.01;

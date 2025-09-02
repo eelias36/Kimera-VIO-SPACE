@@ -17,8 +17,18 @@ resolution: [1920, 1080]
 camera_model: pinhole
 # focal length (pixels) = focal length (mm) * sensor width (pixels) / sensor width (mm)
 # 4266.66666667 = 80 * 1920 / 36
-# 3600 = 80 * 1080 / 24
-intrinsics: [4266.66666667, 3600.0, 960.0, 540.0] #fu, fv, cu, cv
+# 4266.66666667 = 80 * 1080 / 20.25
+intrinsics: [4266.66666667, 4266.66666667, 960.0, 540.0] #fu, fv, cu, cv
 distortion_model: radial-tangential
 distortion_coefficients: [0.0, 0.0, 0.0, 0.0] #[-0.28340811, 0.07395907, 0.00019359, 1.76187114e-05]
+
+# rate_hz: 0.1
+# resolution: [1920, 1080]
+# camera_model: pinhole
+# # focal length (pixels) = focal length (mm) * sensor width (pixels) / sensor width (mm)
+# # 4329.375 = 23.09 * 1920 / 10.24
+# # 4329.375 = 23.09 * 1080 / 5.76
+# intrinsics: [4329.375, 4329.375, 960.0, 540.0] #fu, fv, cu, cv
+# distortion_model: radial-tangential
+# distortion_coefficients: [0.0, 0.0, 0.0, 0.0] #[-0.28340811, 0.07395907, 0.00019359, 1.76187114e-05]
 

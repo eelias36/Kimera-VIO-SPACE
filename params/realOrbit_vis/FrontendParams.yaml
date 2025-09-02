@@ -17,7 +17,7 @@ maxFeaturesPerFrame: 300 #300
 
 # Good Features To Track specific parameters
 quality_level: 0.07 # 0.001
-min_distance: 35 # 20
+min_distance: 15 # 20
 block_size: 5 # 3
 use_harris_detector: 0
 k: 0.04

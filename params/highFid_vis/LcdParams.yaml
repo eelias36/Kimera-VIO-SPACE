@@ -31,6 +31,8 @@ fast_threshold: 20
 
 betweenRotationPrecision: 10000 # 10000 # 1/(0.01*0.01) # Inverse of variance
 betweenTranslationPrecision: 100 # 100 # 1/(0.1*0.1)
+betweenRotationPrecision_lc: 10000 # 10000 # 1/(0.01*0.01) # Inverse of variance
+betweenTranslationPrecision_lc: 100 # 100 # 1/(0.1*0.1)
 
 # PGO solver params
 odom_rot_threshold: -1 # 0.001

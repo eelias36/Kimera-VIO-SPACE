@@ -41,7 +41,7 @@ pcm_rot_threshold: -1 # -1
 pcm_trans_threshold: -1 # -1
 gnc_alpha: 0.7 # 0.7
 
-max_lc_cached_before_optimize: 10 # 10
+max_lc_cached_before_optimize: 1 # 10
 
 # matcher_type options:
 #   0: FLANNBASED
@@ -54,7 +54,7 @@ max_lc_cached_before_optimize: 10 # 10
 #TRACKER PARAMETERS for outlier rejection
 disparity_threshold: 0.5
 
-min_nr_2d2d_inliers: 15 # 20 # 250 # 10
+min_nr_2d2d_inliers: 40 # 15 # 20 # 250 # 10
 min_nr_3d3d_inliers: 5
 min_nr_2d3d_inliers: 20
 

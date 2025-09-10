@@ -1293,16 +1293,16 @@ void LoopClosureDetector::addOdometryFactorAndOptimize(
   const gtsam::Rot3 R_fixed = Rot3(q);
   const gtsam::Pose3 B_lkf_Pose_kf_fixed(R_fixed, B_lkf_Pose_kf.translation());
 
-
   value.insert(gtsam::Symbol(factor.cur_key_),
                estimated_last_pose.compose(B_lkf_Pose_kf_fixed));
-  LOG(INFO) << "Adding odometry factor between "
-            << gtsam::Symbol(factor.cur_key_ - 1) << " and "
-            << gtsam::Symbol(factor.cur_key_) << "\n"
-            << "Estimated last pose: " << estimated_last_pose << "\n"
-            << "VIO last pose: " << W_Pose_Blkf << "\n"
-            << "VIO current pose: " << W_Pose_Bkf << "\n"
-            << "Relative pose from VIO: " << B_lkf_Pose_kf_fixed;
+               
+  // LOG(INFO) << "Adding odometry factor between "
+  //           << gtsam::Symbol(factor.cur_key_ - 1) << " and "
+  //           << gtsam::Symbol(factor.cur_key_) << "\n"
+  //           << "Estimated last pose: " << estimated_last_pose << "\n"
+  //           << "VIO last pose: " << W_Pose_Blkf << "\n"
+  //           << "VIO current pose: " << W_Pose_Bkf << "\n"
+  //           << "Relative pose from VIO: " << B_lkf_Pose_kf_fixed;
 
   nfg.add(gtsam::BetweenFactor<gtsam::Pose3>(gtsam::Symbol(factor.cur_key_ - 1),
                                              gtsam::Symbol(factor.cur_key_),

@@ -31,8 +31,8 @@
 --extract_planes_from_the_scene=false
 
 # For displaying/saving Frontend images:
---visualize_frontend_images=false
---save_frontend_images=false
+--visualize_frontend_images=true
+--save_frontend_images=true
 --log_feature_tracks=false
 --log_mono_tracking_images=false
 --log_stereo_matching_images=false

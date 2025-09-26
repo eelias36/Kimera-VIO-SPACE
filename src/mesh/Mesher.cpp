@@ -13,6 +13,7 @@
  */
 
 #include "kimera-vio/mesh/Mesher.h"
+#include "kimera-vio/frontend/MonoVisionImuFrontend-definitions.h"
 
 #include <gflags/gflags.h>
 #include <glog/logging.h>
@@ -235,6 +236,7 @@ MesherOutput::UniquePtr Mesher::spinOnce(const MesherInput& input) {
   getVerticesMesh(&(mesher_output_payload->vertices_mesh_));
   getPolygonsMesh(&(mesher_output_payload->polygons_mesh_));
   mesher_output_payload->mesh_3d_ = mesh_3d_;
+  LOG(INFO) << "Number of polygons in 3D mesh: " << mesh_3d_.getNumberOfPolygons();
   return mesher_output_payload;
 }
 
@@ -1518,25 +1520,64 @@ void Mesher::updateMesh3D(const PointsWithIdMap& points_with_id_VIO,
 void Mesher::updateMesh3D(const MesherInput& mesher_payload,
                           Mesh2D* mesh_2d,
                           std::vector<cv::Vec6f>* mesh_2d_for_viz) {
-  const StereoFrame& stereo_frame =
-      mesher_payload.frontend_output_->stereo_frame_lkf_;
-  const StatusKeypointsCV& right_keypoints =
-      stereo_frame.right_keypoints_rectified_;
-  std::vector<KeypointStatus> right_keypoint_status;
-  right_keypoint_status.reserve(right_keypoints.size());
-  for (const StatusKeypointCV& kpt : right_keypoints) {
-    right_keypoint_status.push_back(kpt.first);
-  }
 
-  updateMesh3D(mesher_payload.backend_output_->landmarks_with_id_map_,
-               stereo_frame.left_frame_.keypoints_,
-               right_keypoint_status,
-               stereo_frame.keypoints_3d_,
-               stereo_frame.left_frame_.landmarks_,
-               mesher_payload.backend_output_->W_State_Blkf_.pose_.compose(
-                   mesher_params_.B_Pose_camLrect_),
-               mesh_2d,
-               mesh_2d_for_viz);
+  if(mesher_payload.frontend_output_->frontend_type_ == FrontendType::kStereoImu) {
+
+    std::shared_ptr<const VIO::StereoFrontendOutput> stereo_frontend_output =
+        std::dynamic_pointer_cast<const VIO::StereoFrontendOutput>(mesher_payload.frontend_output_);
+
+    const StereoFrame& stereo_frame =
+        stereo_frontend_output->stereo_frame_lkf_;
+    const StatusKeypointsCV& right_keypoints =
+        stereo_frame.right_keypoints_rectified_;
+    std::vector<KeypointStatus> right_keypoint_status;
+    right_keypoint_status.reserve(right_keypoints.size());
+    for (const StatusKeypointCV& kpt : right_keypoints) {
+      right_keypoint_status.push_back(kpt.first);
+    }
+
+    updateMesh3D(mesher_payload.backend_output_->landmarks_with_id_map_,
+            stereo_frame.left_frame_.keypoints_,
+            right_keypoint_status,
+            stereo_frame.keypoints_3d_,
+            stereo_frame.left_frame_.landmarks_,
+            mesher_payload.backend_output_->W_State_Blkf_.pose_.compose(
+                mesher_params_.B_Pose_camLrect_),
+            mesh_2d,
+            mesh_2d_for_viz);
+
+    } else if(mesher_payload.frontend_output_->frontend_type_ == FrontendType::kMonoImu) {
+
+      std::shared_ptr<const VIO::MonoFrontendOutput> mono_frontend_output =
+          std::dynamic_pointer_cast<const VIO::MonoFrontendOutput>(mesher_payload.frontend_output_);
+
+      const Frame& mono_frame =
+          mono_frontend_output->frame_lkf_;
+      const StatusKeypointsCV& keypoints =
+          mono_frame.keypoints_undistorted_;
+      std::vector<KeypointStatus> keypoint_status;
+      keypoint_status.reserve(keypoints.size());
+      for (const StatusKeypointCV& kpt : keypoints) {
+        keypoint_status.push_back(kpt.first);
+      }
+      const BearingVectors bearings;  // Not used for monocular.
+
+      updateMesh3D(mesher_payload.backend_output_->landmarks_with_id_map_,
+              mono_frame.keypoints_,
+              keypoint_status,
+              bearings,  // Not used for monocular.
+              mono_frame.landmarks_,
+              mesher_payload.backend_output_->W_State_Blkf_.pose_.compose(
+                  mesher_params_.B_Pose_camLrect_),
+              mesh_2d,
+              mesh_2d_for_viz);
+
+    } else {
+      LOG(FATAL) << "Unsupported frontend type for Mesher: "
+                 << static_cast<int>(mesher_payload.frontend_output_->frontend_type_);
+    }
+
+
 }
 
 /* -------------------------------------------------------------------------- */

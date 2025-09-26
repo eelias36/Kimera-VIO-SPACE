@@ -26,20 +26,26 @@
 # DATASET_PATH="/data/spacecraft/realOrbits/iss_orbit_15-25m/vis"
 # DATASET_PATH="/data/spacecraft/realOrbits/iss_orbit_15m/tir"
 # DATASET_PATH="/data/spacecraft/realOrbits/iss_orbit_15-25m/tir"
-# DATASET_PATH="/data/spacecraft/realOrbits/iss_orbit_15m/fused"
+DATASET_PATH="/data/spacecraft/realOrbits/iss_orbit_15m/fused"
+# DATASET_PATH="/data/spacecraft/realOrbits/iss_orbit_15m/fused_fullyLit"
+# DATASET_PATH="/data/spacecraft/realOrbits/iss_orbit_15m/fused_adf"
+# DATASET_PATH="/data/spacecraft/realOrbits/iss_orbit_15m/fused_adf_fullyLit"
 # DATASET_PATH="/data/spacecraft/realOrbits/iss_orbit_15m/vis_fullyLit"
 # DATASET_PATH="/data/spacecraft/realOrbits/iss_orbit_15-25m/fused"
+# DATASET_PATH="/data/spacecraft/realOrbits/iss_orbit_15-25m/fused_tsfisd"
 # DATASET_PATH="/data/spacecraft/realOrbits/iss_orbit_15m_3orbits/vis"
+# DATASET_PATH="/data/spacecraft/realOrbits/iss_orbit_15m_3orbits/tir"
 # DATASET_PATH="/data/spacecraft/realOrbits/iss_orbit_15m_3orbits/fused"
+# DATASET_PATH="/data/spacecraft/realOrbits/iss_orbit_15m_3orbits/fused_adf"
 # DATASET_PATH="/data/spacecraft/realOrbits/iss_orbit_15-25m_flat_2orbits/vis_fullyLit"
 # DATASET_PATH="/data/spacecraft/realOrbits/iss_orbit_15-25m_flat_2orbits/vis_fullyLit_brighter"
-DATASET_PATH="/data/spacecraft/realOrbits/iss_orbit_15m_perfectCirc/vis_fullyLit"
+# DATASET_PATH="/data/spacecraft/realOrbits/iss_orbit_15m_perfectCirc/vis_fullyLit"
 
 # Specify: 0 to run on EuRoC data, 1 to run on Kitti (not supported)
 DATASET_TYPE=0
 
 # Specify: 1 to enable the LoopClosureDetector, 0 to not.
-USE_LCD=1
+USE_LCD=0
 
 # Specify: 1 to enable logging of output files, 0 to not.
 LOG_OUTPUT=1
@@ -61,11 +67,11 @@ BUILD_PATH="../build"
 # PARAMS_PATH="../params/90mins_adf"
 # PARAMS_PATH="../params/90mins_adf_tsfisd"
 # PARAMS_PATH="../params/thermal_highFid"
-PARAMS_PATH="../params/highFid_vis"
+# PARAMS_PATH="../params/highFid_vis"
 # PARAMS_PATH="../params/realOrbit_vis"
 # PARAMS_PATH="../params/realOrbit_vis_highRes"
 # PARAMS_PATH="../params/realOrbit_tir"
-# PARAMS_PATH="../params/realOrbit_fused"
+PARAMS_PATH="../params/realOrbit_fused"
 
 # Vocabulary path: specify where the vocabulary for loop closure is.
 VOCABULARY_PATH="../vocabulary"

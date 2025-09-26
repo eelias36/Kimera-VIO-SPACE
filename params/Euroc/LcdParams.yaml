@@ -29,6 +29,9 @@ fast_threshold: 20
 betweenRotationPrecision: 10000 # 1/(0.01*0.01)
 betweenTranslationPrecision: 100 # 1/(0.1*0.1)
 
+betweenRotationPrecision_lc: 10000 # 1/(0.01*0.01)
+betweenTranslationPrecision_lc: 100 # 1/(0.1*0.1)
+
 odom_rot_threshold: 0.005
 odom_trans_threshold: 0.05
 pcm_rot_threshold: -1

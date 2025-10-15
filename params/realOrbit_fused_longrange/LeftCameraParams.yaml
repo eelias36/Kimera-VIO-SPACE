@@ -13,12 +13,12 @@ T_BS:
 
 # Camera specific definitions.
 rate_hz: 0.1
-resolution: [640, 512]
+resolution: [1024, 1024]
 camera_model: pinhole
 # focal length (pixels) = focal length (mm) * sensor width (pixels) / sensor width (mm)
-# 1443.125 = 23.09 * 640 / 10.24
-# 1443.125 = 23.09 * 512 / 8.192
-intrinsics: [1443.125, 1443.125, 320.0, 256.0] #fu, fv, cu, cv
+# 7322.0 = 73.22 * 1024 / 10.24
+# 7322.0 = 73.22 * 1024 / 10.24
+intrinsics: [7322.0, 7322.0, 512.0, 512.0] #fu, fv, cu, cv
 distortion_model: radial-tangential
 distortion_coefficients: [0.0, 0.0, 0.0, 0.0] #[-0.28340811, 0.07395907, 0.00019359, 1.76187114e-05]
 

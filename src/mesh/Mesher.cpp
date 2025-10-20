@@ -236,7 +236,7 @@ MesherOutput::UniquePtr Mesher::spinOnce(const MesherInput& input) {
   getVerticesMesh(&(mesher_output_payload->vertices_mesh_));
   getPolygonsMesh(&(mesher_output_payload->polygons_mesh_));
   mesher_output_payload->mesh_3d_ = mesh_3d_;
-  LOG(INFO) << "Number of polygons in 3D mesh: " << mesh_3d_.getNumberOfPolygons();
+  // LOG(INFO) << "Number of polygons in 3D mesh: " << mesh_3d_.getNumberOfPolygons();
   return mesher_output_payload;
 }
 

@@ -1284,14 +1284,30 @@ void LoopClosureDetector::addOdometryFactorAndOptimize(
   // relative poses.
   CHECK_EQ(W_Pose_B_kf_vio_.first, factor.cur_key_ - 1);
   const gtsam::Pose3& W_Pose_Blkf = W_Pose_B_kf_vio_.second;
-  const gtsam::Pose3& B_lkf_Pose_kf = W_Pose_Blkf.between(W_Pose_Bkf);
+  // const gtsam::Pose3& B_lkf_Pose_kf = W_Pose_Blkf.between(W_Pose_Bkf);
 
-  // Normalize rotation to avoid accumulation of numerical errors over time.
-  const gtsam::Rot3 R_rel = B_lkf_Pose_kf.rotation();
+  // Ensure rotations are on SO(3)
+  const gtsam::Rot3 R_rel = W_Pose_Blkf.rotation();
   Eigen::Quaterniond q = R_rel.toQuaternion();
   q.normalize();
   const gtsam::Rot3 R_fixed = Rot3(q);
-  const gtsam::Pose3 B_lkf_Pose_kf_fixed(R_fixed, B_lkf_Pose_kf.translation());
+  const gtsam::Pose3 W_Pose_Blkf_fixed(R_fixed, W_Pose_Blkf.translation());
+
+  const gtsam::Rot3 R_rel2 = W_Pose_Bkf.rotation();
+  Eigen::Quaterniond q2 = R_rel2.toQuaternion();
+  q2.normalize();
+  const gtsam::Rot3 R_fixed2 = Rot3(q2);
+  const gtsam::Pose3 W_Pose_Bkf_fixed(R_fixed2, W_Pose_Bkf.translation());
+
+  const gtsam::Pose3& B_lkf_Pose_kf_fixed = W_Pose_Blkf_fixed.between(W_Pose_Bkf_fixed);
+
+
+  // // Normalize rotation to avoid accumulation of numerical errors over time.
+  // const gtsam::Rot3 R_rel = B_lkf_Pose_kf.rotation();
+  // Eigen::Quaterniond q = R_rel.toQuaternion();
+  // q.normalize();
+  // const gtsam::Rot3 R_fixed = Rot3(q);
+  // const gtsam::Pose3 B_lkf_Pose_kf_fixed(R_fixed, B_lkf_Pose_kf.translation());
 
   value.insert(gtsam::Symbol(factor.cur_key_),
                estimated_last_pose.compose(B_lkf_Pose_kf_fixed));

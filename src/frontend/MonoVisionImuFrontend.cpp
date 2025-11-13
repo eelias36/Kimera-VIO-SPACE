@@ -252,7 +252,7 @@ StatusMonoMeasurementsPtr MonoVisionImuFrontend::processFrame(
   // check if mono frame k has a max pixel value above a minimum threshold
   double minVal, maxVal;
   cv::minMaxLoc(mono_frame_k_->img_, &minVal, &maxVal);
-  if (maxVal < 40) {
+  if (maxVal < 20) {
     LOG(ERROR) << "Skipping feature tracking for frame " << mono_frame_k_->id_
                << " with max pixel value: " << maxVal;
   } else {

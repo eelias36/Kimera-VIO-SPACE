@@ -1575,8 +1575,13 @@ void OpenCvVisualizer3D::visualizeTrajectory3D(WidgetsMap* widgets_map) {
   for (const auto& pose : trajectory_poses_3d_) {
     trajectory.push_back(pose);
   }
-  (*widgets_map)["Trajectory"] = std::make_unique<cv::viz::WTrajectory>(
-      trajectory, cv::viz::WTrajectory::PATH, 1.0, trajectory_color_);
+  {
+    auto traj_widget = std::make_unique<cv::viz::WTrajectory>(
+        trajectory, cv::viz::WTrajectory::PATH, 1.0, trajectory_color_);
+    // Increase line thickness (adjust value as needed).
+    traj_widget->setRenderingProperty(cv::viz::LINE_WIDTH, 5);
+    (*widgets_map)["Trajectory"] = std::move(traj_widget);
+  }
 }
 
 void OpenCvVisualizer3D::visualizeTrajectoryWithFrustums(

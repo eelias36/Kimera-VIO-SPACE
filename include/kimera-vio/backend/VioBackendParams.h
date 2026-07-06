@@ -127,6 +127,7 @@ class BackendParams : public PipelineParams {
   //! max acceptable reprojection error // before tuning: 3
   double outlierRejection_ = 8.0;
   double retriangulationThreshold_ = 1.0e-3;
+  bool enableEPI_ = false;  // If set to true, will refine triangulation using LM.
 
   bool addBetweenStereoFactors_ = true;
 

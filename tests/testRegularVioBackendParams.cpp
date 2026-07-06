@@ -55,7 +55,6 @@ TEST(testRegularVioBackendParams, VioParseYAML) {
   EXPECT_DOUBLE_EQ(10.2, vp.landmarkDistanceThreshold_);
   EXPECT_DOUBLE_EQ(3.2, vp.outlierRejection_);
   EXPECT_DOUBLE_EQ(0.1, vp.retriangulationThreshold_);
-  EXPECT_EQ(vp.enableEPI_, true);
   EXPECT_EQ(vp.addBetweenStereoFactors_, true);
   EXPECT_DOUBLE_EQ(1.11, vp.betweenRotationPrecision_);
   EXPECT_DOUBLE_EQ(2.22, vp.betweenTranslationPrecision_);

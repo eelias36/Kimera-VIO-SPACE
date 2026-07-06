@@ -379,7 +379,6 @@ class VioBackend {
       const double& landmark_distance_threshold,
       const double& retriangulation_threshold,
       const double& outlier_rejection,
-      const bool& enable_epi,
       gtsam::SmartStereoProjectionParams* smart_factors_params);
 
   void setNoMotionFactorsParams(const double& rotation_precision,

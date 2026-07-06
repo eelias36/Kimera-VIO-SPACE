@@ -1782,7 +1782,6 @@ void VioBackend::setFactorsParams(
                               vio_params.landmarkDistanceThreshold_,
                               vio_params.retriangulationThreshold_,
                               vio_params.outlierRejection_,
-                              vio_params.enableEPI_,
                               smart_factors_params);
 
   setNoMotionFactorsParams(vio_params.no_motion_position_precision_,
@@ -1818,7 +1817,6 @@ void VioBackend::setSmartStereoFactorsParams(
     const double& landmark_distance_threshold,
     const double& retriangulation_threshold,
     const double& outlier_rejection,
-    const bool& enable_epi,
     gtsam::SmartStereoProjectionParams* smart_factors_params) {
   CHECK_NOTNULL(smart_factors_params);
   *smart_factors_params = gtsam::SmartStereoProjectionParams();
@@ -1828,7 +1826,7 @@ void VioBackend::setSmartStereoFactorsParams(
   smart_factors_params->setRetriangulationThreshold(retriangulation_threshold);
   smart_factors_params->setDynamicOutlierRejectionThreshold(outlier_rejection);
   //! EPI: If set to true, will refine triangulation using LM.
-  smart_factors_params->setEnableEPI(enable_epi);
+  smart_factors_params->setEnableEPI(false);
   smart_factors_params->setLinearizationMode(gtsam::HESSIAN);
   smart_factors_params->setDegeneracyMode(gtsam::ZERO_ON_DEGENERACY);
   smart_factors_params->throwCheirality = false;

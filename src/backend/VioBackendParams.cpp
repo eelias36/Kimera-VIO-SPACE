@@ -118,7 +118,6 @@ bool BackendParams::parseYAMLVioBackendParams(const YamlParser& yaml_parser) {
   yaml_parser.getYamlParam("outlierRejection", &outlierRejection_);
   yaml_parser.getYamlParam("retriangulationThreshold",
                            &retriangulationThreshold_);
-  yaml_parser.getYamlParam("enableEPI", &enableEPI_);
   yaml_parser.getYamlParam("addBetweenStereoFactors",
                            &addBetweenStereoFactors_);
   yaml_parser.getYamlParam("betweenRotationPrecision",
@@ -196,7 +195,6 @@ bool BackendParams::equalsVioBackendParams(const BackendParams& vp2,
       (fabs(outlierRejection_ - vp2.outlierRejection_) <= tol) &&
       (fabs(retriangulationThreshold_ - vp2.retriangulationThreshold_) <=
        tol) &&
-       (enableEPI_ == vp2.enableEPI_) &&
       (addBetweenStereoFactors_ == vp2.addBetweenStereoFactors_) &&
       (fabs(betweenRotationPrecision_ - vp2.betweenRotationPrecision_) <=
        tol) &&
@@ -256,8 +254,6 @@ void BackendParams::printVioBackendParams() const {
       outlierRejection_,
       "Retriangulation Threshold",
       retriangulationThreshold_,
-      "Enable EPI",
-      enableEPI_,
       "Add Btw Stereo Factors",
       addBetweenStereoFactors_,
       "Btw Rotation Precision",

@@ -41,7 +41,7 @@ pcm_rot_threshold: -1 # -1
 pcm_trans_threshold: -1 # -1
 gnc_alpha: 0.999 # 0.7
 
-max_lc_cached_before_optimize: 5 # 10
+max_lc_cached_before_optimize: 1 # 10
 
 # matcher_type options:
 #   0: FLANNBASED
